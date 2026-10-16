@@ -1,5 +1,0 @@
-{
-  "schemaVersion": "edge-e2e-synthetic-release-site-manifest-v1",
-  "synthetic": true,
-  "files": ["index.html", "privacy.html"]
-}
