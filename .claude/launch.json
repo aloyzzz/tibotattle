@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "usage-monitor-local",
+      "name": "tibotattle-serve",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["./apps/local/server.js"],
+      "runtimeArgs": ["./bin/tibotattle.js", "serve"],
       "port": 8787
     }
   ]

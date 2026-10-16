@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - name: Syntax check entry points
+        run: |
+          node --check bin/tibotattle.js
+          node --check apps/electron/main.js
+      - name: Test
+        run: npm test
+      - name: CLI smoke (synthetic, empty agent dir)
+        run: |
+          mkdir -p "$RUNNER_TEMP/agent/sessions"
+          node bin/tibotattle.js doctor --agent-dir "$RUNNER_TEMP/agent" --state-dir "$RUNNER_TEMP/state"
+          node bin/tibotattle.js scan --agent-dir "$RUNNER_TEMP/agent" --state-dir "$RUNNER_TEMP/state"

@@ -1,75 +1,48 @@
 name: Bug report
-description: Report a problem with the local TiboTattle app or dashboard.
+description: Report a problem with the TiboTattle CLI, dashboard or desktop app.
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for the report. For problems with the hosted service at
-        tibotattle.com, use the "Hosted service issue" template instead.
-        For security problems, use a private GitHub Security Advisory,
-        not a public issue (see SECURITY.md).
+        Thanks for the report. For security problems, use a private GitHub
+        Security Advisory, not a public issue (see SECURITY.md). Problems with
+        omp itself belong in omp's repository; TiboTattle is not affiliated with omp.
   - type: input
-    id: app-version
+    id: version
     attributes:
-      label: App version
-      description: From Settings → About or the menu bar item (for example, vX.Y.Z).
-      placeholder: vX.Y.Z
+      label: TiboTattle version or commit
+      placeholder: 0.2.0 or a commit hash
     validations:
       required: true
   - type: dropdown
-    id: install-channel
+    id: surface
     attributes:
-      label: Install channel
+      label: Where does it happen?
       options:
-        - Release download (tibotattle.com / TiboTattle GitHub releases)
-        - Built from source
-        - Preview / development build
+        - CLI (serve, scan, report, doctor)
+        - Browser dashboard
+        - Desktop app (Electron)
     validations:
       required: true
   - type: input
-    id: operating-system
+    id: environment
     attributes:
-      label: Operating system and exact build
-      description: On macOS, include both ProductVersion and BuildVersion from `sw_vers`.
-      placeholder: macOS 26.4 (BuildVersion 25E...)
+      label: Operating system, Node.js version and omp version
+      placeholder: macOS 26.0 arm64, Node.js 22.13.1, omp x.y.z
     validations:
       required: true
-  - type: dropdown
-    id: architecture
+  - type: textarea
+    id: doctor
     attributes:
-      label: Architecture
-      options:
-        - Apple silicon (arm64)
-        - Intel Mac (x64)
-        - Windows (x64)
-        - Linux (x64)
-        - Linux (arm64)
-        - Other / not sure
-    validations:
-      required: true
-  - type: dropdown
-    id: installation-history
-    attributes:
-      label: Installation history
-      options:
-        - Updated over an older TiboTattle version
-        - Fresh install with no previous TiboTattle version
-        - Reinstalled the same version
-        - Not sure
-    validations:
-      required: true
-  - type: input
-    id: previous-version
-    attributes:
-      label: Previous app version
-      description: If this was an update, give the last TiboTattle version that opened successfully.
-      placeholder: vX.Y.Z or not applicable
+      label: Output of `node bin/tibotattle.js doctor`
+      description: Run it without `--show-paths` so no local paths are included.
+      render: text
   - type: textarea
     id: repro
     attributes:
       label: Steps to reproduce
-      description: Numbered steps. Use redacted or synthetic examples only.
+      description: Numbered steps. Use synthetic examples only.
       placeholder: |
         1. ...
         2. ...
@@ -85,11 +58,7 @@ body:
     id: actual
     attributes:
       label: Actual behavior
-      description: |
-        What happened instead. If relevant, include output from the built-in
-        diagnostics: `npm run diagnose:dashboard` from a source checkout.
-        If startup shows a fixed support code, include that code. Review all
-        diagnostics and screenshots for private data before sharing.
+      description: Include any fixed error code printed (for example `error store_newer`). Check screenshots for private data before sharing.
     validations:
       required: true
   - type: checkboxes
@@ -97,5 +66,5 @@ body:
     attributes:
       label: Content check
       options:
-        - label: This report contains no prompts, model responses, or real file paths from coding-agent sessions.
+        - label: This report contains no prompts, model responses, real file paths or account details from coding-agent sessions.
           required: true

@@ -18,7 +18,7 @@
     "report": "node ./bin/tibotattle.js report",
     "doctor": "node ./bin/tibotattle.js doctor",
     "desktop": "electron ./apps/electron/main.js",
-    "test": "node --test --test-concurrency=1 test/"
+    "test": "node --test --test-concurrency=1 \"test/**/*.test.js\""
   },
   "devDependencies": {
     "electron": "38.2.2"

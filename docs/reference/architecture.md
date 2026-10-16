@@ -334,6 +334,7 @@ SVG, no external assets, works offline, light and dark themes.
 
 `main.js` starts the monitor and server in-process on an ephemeral loopback
 port, opens a window on it, and shows a tray whose title/tooltip is the lowest
-remaining allowance. Menu: Open dashboard, Refresh now, Quit. Window uses
+remaining allowance. Menu: Open dashboard, Refresh now, Start at login (macOS and
+Windows), Quit. Window uses
 `contextIsolation: true`, `sandbox: true`, `nodeIntegration: false`, and blocks
 navigation and new windows outside the loopback origin.
