@@ -88,7 +88,7 @@ export function createMonitor({
 
     let sessions = null;
     try {
-      const res = await scan({ store, key, sessionRoots, signal });
+      const res = await scan({ store, key, sessionRoots, signal, labels });
       sessions = {
         filesSeen: res?.filesSeen ?? 0,
         filesRead: res?.filesRead ?? 0,
