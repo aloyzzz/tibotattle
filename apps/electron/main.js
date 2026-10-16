@@ -22,6 +22,14 @@ const TRAY_INTERVAL_MS = 60 * 1000;
 const IS_MAC = process.platform === 'darwin';
 const LOGIN_ITEMS_SUPPORTED = IS_MAC || process.platform === 'win32';
 
+// Hide only node:sqlite's experimental notice; keep every other warning.
+const defaultWarningListeners = process.listeners('warning');
+process.removeAllListeners('warning');
+process.on('warning', (warning) => {
+  if (warning?.name === 'ExperimentalWarning' && /SQLite/i.test(warning.message)) return;
+  for (const listener of defaultWarningListeners) listener.call(process, warning);
+});
+
 app.setName('TiboTattle');
 app.setPath('userData', path.join(app.getPath('appData'), 'TiboTattle'));
 
@@ -231,6 +239,7 @@ app.on('will-quit', (event) => {
         // already closed
       }
       tray?.destroy();
-      app.quit();
+      // Cleanup is complete; exit without re-running the quit sequence.
+      app.exit(0);
     });
 });

@@ -465,9 +465,11 @@ function renderReport(periodName, u, p, series, nowMs) {
           fmtPct(s.remainingFraction),
           fmtWhen(s.resetsAt, nowMs),
           `${fmtWhen(s.recordedAt, nowMs)}${s.stale ? ' (stale)' : ''}`,
-          s.pace?.projectedExhaustAt == null
+          !s.pace
             ? '-'
-            : `${s.pace.exhaustsBeforeReset ? 'runs out' : 'lasts'} ${fmtWhen(s.pace.projectedExhaustAt, nowMs)}`,
+            : s.pace.exhaustsBeforeReset
+              ? `runs out ${fmtWhen(s.pace.projectedExhaustAt, nowMs)}`
+              : 'lasts to reset',
         ]),
       ),
     );

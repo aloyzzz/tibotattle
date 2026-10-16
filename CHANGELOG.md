@@ -1,10 +1,39 @@
 # Changelog
 
-Notable user-facing changes to TiboTattle are recorded here, newest first. The
-layout keeps an explicit `Unreleased` boundary and uses SemVer-compatible
-version labels; it does not imply API stability before 1.0.
+Notable user-facing changes to TiboTattle, newest first. Versions are
+SemVer-compatible labels; there is no API stability promise before 1.0.
 
-## Provenance and acknowledgements
+## [Unreleased]
+
+## 0.2.0 - 2026-10-16 (omp edition)
+
+TiboTattle is now a local-first monitor for the
+[oh-my-pi](https://github.com/can1357/oh-my-pi) (`omp`) coding agent. See
+[the decision record](docs/decisions/2026-10-16-omp-edition.md).
+
+- Replace Codex ingestion with omp: session logs under
+  `~/.omp/agent/sessions` and subscription snapshots from omp's
+  `usage_history` table (read-only).
+- New loopback dashboard with Overview, Usage & cost, Model performance
+  (decode tokens per second and time to first token), Allowance (with pace
+  forecast) and Projects pages.
+- New CLI: `serve`, `scan`, `report` and `doctor`.
+- New minimal Electron desktop shell with a tray showing the lowest remaining
+  allowance.
+- Zero runtime dependencies; Node.js 22.13+ built-ins only.
+- Remove community sharing, the hosted Cloudflare Worker and GCP services,
+  accounts and sign-in, updater feeds, signing, notarization and release
+  tooling, the native macOS app, and all network access.
+- The 0.1.x index is not migrated. The new index is rebuilt from omp's files.
+
+## Retired Codex edition (0.1.x)
+
+The entries below describe the retired Codex edition and its hosted service,
+installers and sharing features. None of it ships in 0.2.0. Its source,
+release notes and evidence remain in git history; links below point to the
+upstream repository at that time.
+
+### Provenance and acknowledgements
 
 - A release heading links to its checked-in notes. The date is the UTC calendar
   date on which the public GitHub Release was published, except the explicitly
@@ -35,9 +64,7 @@ dependency maintenance merged in [PR #20](https://github.com/adamallcock/tibotat
 Tool-assisted co-authorship is recorded in Git commit trailers; the maintainer
 remains accountable for release wording, validation, signing, and publication.
 
-## [Unreleased]
-
-## [0.1.28](./release-notes/0.1.28.md) - 2026-10-09
+### 0.1.28 - 2026-10-09
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.28) ·
 [exact application source](https://github.com/adamallcock/tibotattle/commit/bf84bc6c04372bb2cee64ef4a4f29981432fc3eb) ·
@@ -59,7 +86,7 @@ carries those changes forward from the last public 0.1.26 release.
   download dependencies.
 
 
-## [0.1.27](./release-notes/0.1.27.md) - 2026-10-04
+### 0.1.27 - 2026-10-04
 
 **Status:** Tagged and signed candidate only. No public GitHub Release or
 stable update was published. Its source and artifact evidence remain frozen;
@@ -86,7 +113,7 @@ stable update was published. Its source and artifact evidence remain frozen;
 - Update Electron to 43.5.0 and refresh affected transitive dependencies for
   security advisories.
 
-## [0.1.26](./release-notes/0.1.26.md) - 2026-09-27
+### 0.1.26 - 2026-09-27
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.26) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.26) ·
@@ -106,7 +133,7 @@ carries those changes forward from the last public 0.1.24 release.
   during refresh, correct cached Trends header ranges, and retain newly
   recognized Claude model names. Keep forecast-only GPT-6.1 Astra unpriced.
 
-## [0.1.25](./release-notes/0.1.25.md) - 2026-09-27
+### 0.1.25 - 2026-09-27
 
 **Status:** Tagged and signed candidate only. No public GitHub Release or
 stable update was published. The source and artifacts remain frozen on hold.
@@ -127,7 +154,7 @@ stable update was published. The source and artifacts remain frozen on hold.
 - Keep the forecast-only GPT-6.1 Astra identity explicitly unpriced in local
   Codex usage reports.
 
-## [0.1.24](./release-notes/0.1.24.md) - 2026-09-23
+### 0.1.24 - 2026-09-23
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.24) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.24) ·
@@ -154,7 +181,7 @@ stable update was published. The source and artifacts remain frozen on hold.
 - Recover optional uploads from temporary service failures and trigger a
   coalesced upload after a successful index update, preserving opt-outs and backoff.
 
-## [0.1.23](./release-notes/0.1.23.md) - 2026-09-14
+### 0.1.23 - 2026-09-14
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.23) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.23) ·
@@ -179,7 +206,7 @@ stable update was published. The source and artifacts remain frozen on hold.
   empty-profile qualification, with final-package Linux runtime checks.
 No changes yet.
 
-## [0.1.22](./release-notes/0.1.22.md) - 2026-09-11
+### 0.1.22 - 2026-09-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.22) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.22) ·
@@ -190,9 +217,9 @@ Add Projects & threads and local model-performance views, with scoped cached
 results during refresh. Repair large-history contribution preparation and
 resumption, current-parser accounting compatibility, completed-history status
 and cache-drop thread links. Keep refresh and allowance-history controls stable.
-See the [release notes](./release-notes/0.1.22.md).
+See the [release notes](https://github.com/adamallcock/tibotattle/blob/v0.1.22/release-notes/0.1.22.md).
 
-## [0.1.21](./release-notes/0.1.21.md) - 2026-09-11
+### 0.1.21 - 2026-09-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.21) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.21) ·
@@ -203,9 +230,9 @@ Complete native 0.1.18's update path to Electron, preserving local history,
 settings and contribution choice. Retain the public key needed by the incoming
 native update and declare macOS 14 correctly in both Mac installers. Restore
 compact website download controls with GitHub asset links. See the
-[release notes](./release-notes/0.1.21.md).
+[release notes](https://github.com/adamallcock/tibotattle/blob/v0.1.21/release-notes/0.1.21.md).
 
-## [0.1.20](./release-notes/0.1.20.md) - 2026-09-11
+### 0.1.20 - 2026-09-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.20) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.20) ·
@@ -219,7 +246,7 @@ compact website download controls with GitHub asset links. See the
 - Keeps recovery explicit for damaged or incompatible data and preserves unknown
   startup registration without changing it.
 
-## [0.1.19](./release-notes/0.1.19.md) - 2026-09-10
+### 0.1.19 - 2026-09-10
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.19) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.19) ·
@@ -243,7 +270,7 @@ The 0.1.20 release above addresses that limitation; the checked-in 0.1.19 notes
 The 0.1.20 candidate above addresses that limitation; the checked-in 0.1.19 notes
 preserve the published release wording.
 
-## [0.1.18](./release-notes/0.1.18.md) - 2026-09-05
+### 0.1.18 - 2026-09-05
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.18) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.18) ·
@@ -267,14 +294,14 @@ preserve the published release wording.
   ([issue #93](https://github.com/adamallcock/tibotattle/issues/93)). The owner
   explicitly accepted the unavailable disposable-profile/manual and physical
   Intel qualification for this release only; reported tester success is not
-  a formal receipt. See the [release-specific waiver](./docs/decisions/2026-09-05-release-0-1-18-manual-qualification-waiver.md).
+  a formal receipt. See the [release-specific waiver](https://github.com/adamallcock/tibotattle/blob/v0.1.28/docs/decisions/2026-09-05-release-0-1-18-manual-qualification-waiver.md).
 
 Final artifact trust, data preservation, updater integrity and unexpected
 Keychain prompts remain non-waived gates. This release does not add Windows,
 Linux, Electron or Homebrew Intel support, or activate hosted migrations,
 device pairing or new contribution consent.
 
-## [0.1.17](./release-notes/0.1.17.md) - 2026-09-03
+### 0.1.17 - 2026-09-03
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.17) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.17) ·
@@ -284,9 +311,9 @@ device pairing or new contribution consent.
 Stable product build `1024` uses accepted runtime basis
 `394c8a03a986e0daadbe662679fd002202682e44`; internal RC9 `1023.7` was the
 preceding dogfood allocation. PR #94 outcome is `passed_with_historical_artifact_refusal`; see the
-[qualification receipt](./docs/receipts/2026-09-03-pr94-account-plan-attribution-qualification.md).
+[qualification receipt](https://github.com/adamallcock/tibotattle/blob/v0.1.28/docs/receipts/2026-09-03-pr94-account-plan-attribution-qualification.md).
 The manual clean-profile and physical Login Item matrix remains deferred; see
-the [native release plan](./docs/plans/2026-09-03-public-0.1.17-release.md).
+the [native release plan](https://github.com/adamallcock/tibotattle/blob/v0.1.28/docs/plans/2026-09-03-public-0.1.17-release.md).
 Hosted migrations and device pairing are not activated by the desktop release.
 
 This entry combines direct post-v0.1.16 work with reviewed merges in [PR #80](https://github.com/adamallcock/tibotattle/pull/80),
@@ -311,7 +338,7 @@ The [merged-main comparison](https://github.com/adamallcock/tibotattle/compare/v
 provides public branch-history context; PR links identify reviewed merges, while
 unlinked items are direct commits.
 
-### Added
+#### Added
 
 - Adds admin metrics history with daily sparklines, 24-hour deltas, cached
   history, allowance lineage, plan cohort filters, and alert controls
@@ -358,7 +385,7 @@ unlinked items are direct commits.
   hosted view is operational; installing the desktop app does not activate it
   ([PR #89](https://github.com/adamallcock/tibotattle/pull/89)).
 
-### Changed
+#### Changed
 
 - Declares external participation accurately in production and removes two
   retired admin cards that permanently reported zero.
@@ -445,7 +472,7 @@ unlinked items are direct commits.
   lifecycle reference for the remaining interfaces
   ([PR #78](https://github.com/adamallcock/tibotattle/pull/78)).
 
-### Fixed
+#### Fixed
 
 - Keeps the macOS dashboard sidebar recoverable through a toolbar button, View
   menu command, keyboard shortcut, and one-time rescue for affected installs
@@ -514,7 +541,7 @@ unlinked items are direct commits.
 - Top-aligns the homepage comparison graph with its title across platform-tab
   changes ([PR #76](https://github.com/adamallcock/tibotattle/pull/76)).
 
-### Release tooling
+#### Release tooling
 
 - Updates the root schema-validation dependency `fast-uri` to patched 3.1.6.
 - Verifies that the rendered social preview is the exact asset selected for the
@@ -536,12 +563,12 @@ unlinked items are direct commits.
   proceed. The release retains the fail-closed source, generation, resource,
   validation, atomic-publication, selected-plan Trends, and snapshot safeguards.
   PR #94 outcome is `passed_with_historical_artifact_refusal` in the [qualification
-  receipt](./docs/receipts/2026-09-03-pr94-account-plan-attribution-qualification.md).
+  receipt](https://github.com/adamallcock/tibotattle/blob/v0.1.28/docs/receipts/2026-09-03-pr94-account-plan-attribution-qualification.md).
 - Establishes scoped, machine-checked repository guidance for coding agents and
   the root layout they may extend
   ([PR #77](https://github.com/adamallcock/tibotattle/pull/77)).
 
-### Related open issues
+#### Related open issues
 
 These are tracking references, not completed release items:
 
@@ -555,7 +582,7 @@ These are tracking references, not completed release items:
 - Multiple Codex roots for Windows plus WSL remain open in
   [issue #51](https://github.com/adamallcock/tibotattle/issues/51).
 
-## [0.1.16](./release-notes/0.1.16.md) - 2026-08-21
+### 0.1.16 - 2026-08-21
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.16) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.16) ·
@@ -564,7 +591,7 @@ These are tracking references, not completed release items:
 - Keeps charts and cost figures visible through recalculation windows while
   preserving honest staleness status.
 
-## [0.1.15](./release-notes/0.1.15.md) - 2026-08-21
+### 0.1.15 - 2026-08-21
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.15) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.15) ·
@@ -574,7 +601,7 @@ These are tracking references, not completed release items:
 
 **Reference:** [PR #50](https://github.com/adamallcock/tibotattle/pull/50).
 
-## [0.1.14](./release-notes/0.1.14.md) - 2026-08-20
+### 0.1.14 - 2026-08-20
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.14) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.14) ·
@@ -583,7 +610,7 @@ These are tracking references, not completed release items:
 - Stops timeline charts blanking during refresh and bounds large-history
   accounting work for quota windows with unreadable reset times.
 
-## [0.1.13](./release-notes/0.1.13.md) - 2026-08-20
+### 0.1.13 - 2026-08-20
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.13) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.13) ·
@@ -604,7 +631,7 @@ accounting ([PR #33](https://github.com/adamallcock/tibotattle/pull/33),
 ([PR #35](https://github.com/adamallcock/tibotattle/pull/35),
 [PR #37](https://github.com/adamallcock/tibotattle/pull/37)).
 
-## [0.1.12](./release-notes/0.1.12.md) - 2026-08-15
+### 0.1.12 - 2026-08-15
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.12) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.12) ·
@@ -615,7 +642,7 @@ accounting ([PR #33](https://github.com/adamallcock/tibotattle/pull/33),
 
 **Reference:** [PR #1](https://github.com/adamallcock/tibotattle/pull/1).
 
-## [0.1.11](./release-notes/0.1.11.md) - 2026-08-13
+### 0.1.11 - 2026-08-13
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.11) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.11) ·
@@ -624,7 +651,7 @@ accounting ([PR #33](https://github.com/adamallcock/tibotattle/pull/33),
 - Makes contribution backfill recover from stalls, adds readable allowance
   chart details, and hardens the community estimate.
 
-## [0.1.10](./release-notes/0.1.10.md) - 2026-08-12
+### 0.1.10 - 2026-08-12
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.10) ·
 [source commit](https://github.com/adamallcock/tibotattle/commit/151adec996c9a0f621819f89777ac5a05f1df8b6) ·
@@ -639,7 +666,7 @@ links above use without rewriting published tag history.
 - Makes contribution backfill drain steadily and adds signed-update credential
   recovery.
 
-## [0.1.9](./release-notes/0.1.9.md) - 2026-08-11
+### 0.1.9 - 2026-08-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.9) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.9) ·
@@ -647,7 +674,7 @@ links above use without rewriting published tag history.
 
 - Removes the pairing race between fresh enrollment and browser cookie storage.
 
-## [0.1.8](./release-notes/0.1.8.md) - 2026-08-11
+### 0.1.8 - 2026-08-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.8) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.8) ·
@@ -655,7 +682,7 @@ links above use without rewriting published tag history.
 
 - Makes sign-in single-flight and durable across app updates and relaunches.
 
-## [0.1.7](./release-notes/0.1.7.md) - 2026-08-11
+### 0.1.7 - 2026-08-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.7) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.7) ·
@@ -664,7 +691,7 @@ links above use without rewriting published tag history.
 - Hardens hosted sign-in and re-pairing, bounds allowance estimation memory,
   and polishes the Trends chart.
 
-## [0.1.6](./release-notes/0.1.6.md) - 2026-08-11
+### 0.1.6 - 2026-08-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.6) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.6) ·
@@ -673,7 +700,7 @@ links above use without rewriting published tag history.
 - Recovers lost device credentials, keeps WebKit loopback connections alive,
   and adds accounting resource diagnostics.
 
-## [0.1.5](./release-notes/0.1.5.md) - 2026-08-11
+### 0.1.5 - 2026-08-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.5) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.5) ·
@@ -682,7 +709,7 @@ links above use without rewriting published tag history.
 - Makes upload progress fail honestly, adds the menu-bar mark, and restores a
   memory-bounded allowance estimate.
 
-## [0.1.4](./release-notes/0.1.4.md) - 2026-08-11
+### 0.1.4 - 2026-08-11
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.4) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.4) ·
@@ -691,7 +718,7 @@ links above use without rewriting published tag history.
 - Adds composition-aware estimation, restores full quota history, and improves
   dashboard recovery and evidence labels.
 
-## [0.1.3](./release-notes/0.1.3.md) - 2026-08-10
+### 0.1.3 - 2026-08-10
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.3) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.3) ·
@@ -700,7 +727,7 @@ links above use without rewriting published tag history.
 - Keeps Keychain-bound uploads working across signed updates and adds visible
   credential repair.
 
-## [0.1.2](./release-notes/0.1.2.md) - 2026-08-10
+### 0.1.2 - 2026-08-10
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.2) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.2) ·
@@ -708,7 +735,7 @@ links above use without rewriting published tag history.
 
 - Names incremental-sync failures and makes pending or stalled sync recoverable.
 
-## [0.1.1](./release-notes/0.1.1.md) - 2026-08-10
+### 0.1.1 - 2026-08-10
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.1) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.1) ·
@@ -716,7 +743,7 @@ links above use without rewriting published tag history.
 
 - Increases the contribution backfill batch from 60 to 500 chunks per pass.
 
-## [0.1.0](./release-notes/0.1.0.md) - 2026-08-10
+### 0.1.0 - 2026-08-10
 
 **Provenance:** [GitHub release](https://github.com/adamallcock/tibotattle/releases/tag/v0.1.0) ·
 [annotated source tag](https://github.com/adamallcock/tibotattle/tree/v0.1.0) ·

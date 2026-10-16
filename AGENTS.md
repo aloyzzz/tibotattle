@@ -1,200 +1,93 @@
 # TiboTattle agent guidance
 
-Prefer principles, constraints and verifiable outcomes over canned examples.
+TiboTattle is a local-first monitor for the oh-my-pi (`omp`) coding agent. It
+reads omp's session logs and `usage_history` snapshots, keeps a content-free
+SQLite index, and serves a loopback-only dashboard. `CLAUDE.md` imports this
+file for all agents.
 
-## Use progressive disclosure
+Before changing code, read `docs/reference/architecture.md` (module contracts)
+and, for anything touching data handling, `docs/reference/privacy.md`.
 
-- Apply this file to every task in the repository.
-- Before changing a scoped area, read the nearest scoped `AGENTS.md`, even when
-  the client did not load descendant instructions automatically.
-- Read only the references relevant to the task. Do not preload the documentation
-  tree, large runbooks, or generated artifacts.
-- For unlisted paths, use this root file plus nearby code, manifests, tests, and READMEs.
-- If instructions conflict, follow the narrower scope and surface the conflict.
+## Layout
 
-| Work | Read next |
+| Path | Owns |
 |---|---|
-| Product purpose, setup, or repository layout | `README.md` and `CONTRIBUTING.md` |
-| Security or privacy-sensitive work | `SECURITY.md` |
-| Core product/domain code | `src/AGENTS.md` |
-| Codex ingestion or provider normalization | `src/providers/codex/AGENTS.md` |
-| Contribution projection or prepared sets | `src/contribution/AGENTS.md` |
-| Local companion, dashboard API, or unified index | `apps/local/AGENTS.md` |
-| Browser dashboard or public web UI | `apps/web/AGENTS.md` |
-| Electron macOS bundles, updater, migration, or signing | `apps/electron/AGENTS.md` |
-| Electron desktop lifecycle, IPC, settings, or shell integration | `apps/electron/AGENTS.md` |
-| Hosted Worker, D1/R2, auth, or deployment | `apps/worker/AGENTS.md` |
-| Standalone local-review CLI, artifact, install, or deletion | `local-review/AGENTS.md` |
-| Exact accounting or price semantics | `packages/accounting/AGENTS.md` |
-| Pseudonym derivation or identity continuity | `packages/identity-core/AGENTS.md` |
-| Quota calibration, rolling windows, or forecasts | `packages/quota-analysis/AGENTS.md` |
-| Locale negotiation, catalogs, or browser i18n mirror | `packages/i18n/AGENTS.md` |
-| Telemetry fields, privacy, schemas, or compatibility | `packages/telemetry-contract/AGENTS.md` |
-| Native Windows filesystem or credential security | `native/AGENTS.md` |
-| GitHub workflows, actions, attestations, or release trust | `.github/AGENTS.md` |
-| Build, generator, verification, or release tooling | `scripts/AGENTS.md` |
-| Documentation, evidence, plans, or release claims | `docs/AGENTS.md`, then `docs/README.md` |
+| `src/paths.js`, `src/secret.js` | omp source locations, state directory, local HMAC key |
+| `src/omp/` | session-record normalization, session scanner, quota reader |
+| `src/store.js` | SQLite index: schema, transactions, queries |
+| `src/analysis/` | periods, usage, performance and allowance summaries (pure) |
+| `src/monitor.js` | refresh orchestration, file watching, change events |
+| `src/server.js` | loopback HTTP server, JSON API, SSE |
+| `bin/tibotattle.js` | CLI: `serve`, `scan`, `report`, `doctor` |
+| `apps/web/` | dashboard (plain HTML/CSS/JS, no build step) |
+| `apps/electron/` | optional desktop shell: tray and window on the loopback server |
+| `test/` | `node:test` suites with synthetic fixtures |
+| `docs/` | architecture and privacy references, decisions, user guide |
 
-`CLAUDE.md` imports this policy for all agents.
+Dependencies point inward: `apps/` and `bin/` compose `src/`; `src/analysis/`
+is pure and does no I/O; nothing in `src/` imports `apps/`, `bin/` or `test/`.
 
-## Product invariants
+## Invariants
 
-Changing an invariant requires an explicit product decision, matching tests,
-and updated authoritative documentation.
+Changing one of these needs an explicit decision record in `docs/decisions/`,
+matching tests and updated references.
 
-- Local analysis must work offline, and local HTTP services bind only to loopback.
-- Unexpected Keychain security prompts block release. Routine access must be
-  non-interactive; never weaken protection to suppress prompts. Follow
-  `apps/electron/AGENTS.md` for migration, explicit recovery, and proof.
-- Prompts, responses, raw commands, credentials, private paths/filenames, raw
-  account IDs and session content must not enter derived artifacts, fixtures,
-  logs, diagnostics, issues, commits, or PRs. Opt-in Crashpad dumps and explicit
-  owner-only raw crash exports are sole local exceptions; never project/upload them (`docs/decisions/2026-09-21-opt-in-crash-doctor.md`).
-  Model, provider, speed, tier and plan names in the wire grammar are vocabulary, not account IDs. In logs,
-  only the unseen-name probe's line may list in-grammar model, speed, tier and plan names (`docs/decisions/2026-10-02-catalog-vocabulary-plain-text.md`).
-- Hosted contribution is optional, content-free and pseudonymous. Follow the
-  accountless Electron defaults and transition in
-  `docs/decisions/2026-09-04-accountless-sharing-policy.md`; preserve durable
-  opt-outs and legacy consent contracts; hosted erasure is owner-only.
-- Derived data is allowlisted and schema-validated. Unknown upstream fields are
-  omitted; unknown, stale, unavailable, or unattributed evidence stays explicit.
-  Never convert missing evidence to zero or inferred continuity.
-- Accounting and ingestion are replay-safe, identity-scoped, bounded, and
-  deterministic. Corrections are additive; durable state transitions are
-  recoverable; repeated work must not double count.
-- Display windows are not retention policy. Preserve accumulated local evidence
-  unless an explicit, receipt-backed deletion workflow authorizes exact targets.
-- Schema evolution is fail-closed and forward-moving. Never relabel a database
-  version, destructively downgrade state, wipe application data, or let an older
-  reader mutate newer state. Diagnose and rehearse recovery against a copy.
-- Local, hosted, browser, native, installed-artifact, CI, signed-release, updater,
-  and public-deployment evidence are separate gates; one never proves another.
+- **Offline.** No outbound network requests anywhere: no telemetry, update
+  checks, crash upload, remote fonts, CDNs or analytics. The Electron shell
+  blocks every request outside its own loopback origin.
+- **Loopback only.** The server binds `127.0.0.1`, validates the `Host` header,
+  sends a strict CSP, and requires `X-TiboTattle: 1` on mutating routes.
+- **Read-only toward omp.** omp files are never written. `agent.db` is opened
+  read-only and only `usage_history` columns listed in the architecture
+  reference are selected; `auth_credentials`, `email` and `account_id` are
+  never read.
+- **Content-free index.** Prompts, responses, tool calls, file paths, file
+  names, cwd, emails, raw account keys and session IDs never enter the index,
+  logs, API responses, errors or fixtures. Identifiers are stored only as keyed
+  digests. Project labels live in memory only.
+- **Vocabulary is sanitized.** Model, provider, api, tier, stop reason and limit
+  names pass the vocabulary pattern or become `"unrecognized"`.
+- **Missing evidence stays null.** Unknown cost is unpriced, never `$0`; absent
+  timing is excluded from speed statistics, never zero; stale allowance is
+  marked stale and gets no forecast.
+- **Replay safe.** Re-reading a file never double counts; each file's records
+  and cursor commit in one transaction.
+- **Forward-only schema.** Never relabel, downgrade or wipe the index. An older
+  build refuses a newer schema (`store_newer`) instead of mutating it.
+- **No hosted surface.** No sharing, accounts, uploads, Worker, cloud service,
+  updater feed or release-publication tooling. These were removed on purpose
+  (`docs/decisions/2026-10-16-omp-edition.md`).
+- **Zero runtime dependencies.** Node.js 22.13+ built-ins only. Electron is the
+  single dev dependency. Do not add packages without a decision record.
+- **Fixed error codes.** CLI and API errors are short codes; never print stack
+  traces, paths or input back to the user.
 
-## Truth and evidence
+## Working rules
 
-- Verify the exact checkout, active diff, relevant runtime, and artifact before
-  making a current-state claim.
-- Use code and tests to establish implemented behavior, maintained decisions and
-  runbooks to establish intended operations, and direct runtime or artifact
-  inspection to establish live state. Reconcile disagreements; do not silently
-  choose the convenient source.
-- Treat dated plans, audits, QA notes, reports, and receipts as point-in-time
-  evidence unless `docs/README.md` names them as current authority.
-- State the strongest proven result and the remaining gate. Use exact versions,
-  commits, paths, commands, and dates when they matter.
-- Do not claim provider-authoritative billing, quota formulas, platform support,
-  release provenance, or production readiness beyond the evidence actually held.
-
-## Working contract
-
-- Start by inspecting `git status`, applicable instructions, relevant entrypoints,
-  and nearby tests. Preserve all unrelated and user-owned changes.
-- Define the acceptance boundary and risks before broad work. Keep simple tasks
-  direct; keep non-trivial work on a concise, durable plan.
-- Reuse reviewed abstractions and public entrypoints. Add a dependency or new
-  root-level concept only when existing boundaries cannot express the need.
-- Prefer the smallest coherent change. Avoid opportunistic rewrites, speculative
-  compatibility layers, duplicated policy, and unrequested cleanup.
-- Preserve cancellation, retry, idempotency, atomicity, permissions, and bounded
-  resource behavior across success and failure paths.
-- Parallelize independent investigation or validation when useful, with explicit
-  file ownership and integration boundaries. Verify delegated conclusions before
-  relying on release- or privacy-sensitive claims.
-- Update tests, generated outputs, schemas, public types, current READMEs, and
-  maintained docs in the same change when their contract changes. Git-remove
-  obsolete docs unless explicit audit, recovery, or release value justifies a
-  dated snapshot; never leave known-wrong guidance in place for history alone.
-- When deleting or moving docs, search old path and basename across tracked files;
-  repair or remove matches in comments, fixtures, and security allowlists.
-
-## Architecture and code
-
-- `src/` owns local/domain behavior; `apps/` composes delivery surfaces;
-  `packages/` exposes runtime-neutral public APIs; `scripts/` and `tools/` are
-  one-way build, verification, and operations entrypoints.
-- Enter owned source areas and workspace packages through reviewed public
-  facades. Do not import private package paths, reach from one app into another,
-  or make product code depend on tests, scripts, or tools.
-- Production JavaScript is ESM with statically reviewable dependencies. Inject
-  platform adapters from composition roots rather than hiding runtime selection.
-- `npm run architecture:check` is the mechanical dependency authority. Do not
-  baseline, bypass, or recreate retired compatibility paths to satisfy it.
-- Keep reusable packages platform-neutral. A package must not depend on an app,
-  root product source, or repository tooling.
-- Do not hand-edit `generated/` or generator-owned contract artifacts. Change the
-  canonical source and use its generator. R7 receipt regeneration is a protected,
-  environment-specific workflow, not routine validation.
-- Keep schemas closed where they protect privacy or compatibility. A schema
-  change includes validators, mirrors, fixtures, compatibility declarations,
-  and migration behavior.
-- The tracked root layout is an allowlist. Any new root entry requires a deliberate
-  update to `ROOT_WORKSPACE_POLICY` and its tests.
+- Inspect the current files and nearby tests before editing; preserve unrelated
+  changes. Keep changes small and coherent; avoid speculative abstractions.
+- Production code is ESM with static, reviewable imports.
+- Use synthetic, content-free fixtures. Never commit real omp sessions,
+  `agent.db` files, paths, account data or screenshots containing them.
+- When a contract changes, update tests, `docs/reference/architecture.md`,
+  `docs/reference/privacy.md` and the user guide in the same change.
+- Do not push, publish, tag or create releases without explicit authorization.
 
 ## Validation
 
-- Use pnpm for the root workspace. The Worker app has an independent npm
-  lockfile. Do not mix lockfile ownership.
-- Root tooling requires Node.js 22.13 or newer. Production Electron candidate
-  preparation requires exactly Node.js 26.2.0; macOS packaging and installed
-  checks require their supported Mac target and GUI context. Unsupported
-  environments must fail honestly rather than produce partial proof.
-- Run the smallest meaningful validation first, then broaden according to impact.
-  Direct test-file execution is preferred while iterating.
-- Use `npm run test:preflight` for documentation, root-layout, and whitespace
-  checks; `npm run architecture:check` for dependency-boundary changes; and
-  `npm run test:changed -- --base <review-base>` when a trustworthy base exists.
-- Use `npm test` for broad root/shared behavior and `npm run check` only when the
-  complete cross-surface gate is justified and its platform prerequisites exist.
-- Use the owning package or surface gate for scoped changes. The macOS and Worker
-  files define their retained gates.
-- Tests are serial where configured. Do not weaken assertions, exclusions,
-  timeouts, privacy checks, or platform gates to obtain green output.
-- For user-facing changes, inspect the rendered target with real-system data.
-  Browser rendering does not qualify native rendering, and simulated platform
-  checks do not qualify physical operating-system behavior.
-- If validation cannot run because dependencies, credentials, hardware, or
-  services are absent, report that as an environment gap, not a product failure
-  or a passing gate.
+- `npm test` runs every `node:test` suite serially. It needs no install.
+- Iterate with a single file: `node --test test/<name>.test.js`.
+- `node bin/tibotattle.js doctor` and `scan --agent-dir <synthetic dir>` give a
+  quick end-to-end check against fixture data.
+- The Electron shell needs `npm install` and a GUI session. A headless smoke
+  (for example under `xvfb-run`) does not prove macOS or Windows tray behavior;
+  report what was actually exercised.
+- If a check cannot run in the current environment, say so; do not report it
+  as passing.
 
-## Authorization and sensitive operations
+## Review checklist
 
-- Do not push, publish, deploy, apply remote migrations, create releases, install
-  into system application locations, submit to stores, send messages, or change
-  external resources without explicit authorization for that outcome.
-- Treat production and staging writes, live load tests, real-account experiments,
-  R7 regeneration, signing, notarization, updater publication, and website
-  publication as protected operations; a dry run never authorizes a write.
-- Never print, commit, or document secrets. Keep credentials in their designed
-  local secret store and preserve redaction in failures and diagnostics.
-- Never use real private session data in tests. Use synthetic, minimal, content-free
-  fixtures that exercise the same structural boundary.
-- Before any destructive local action, resolve exact targets, inspect ownership
-  and links, preserve unrelated state, and prefer reversible or journaled flows.
-- Before staging or committing, inspect the diff and status. Do not rewrite shared
-  history, force-push, or discard unrelated work without explicit authorization.
-
-## Code review rules
-
-Flag changes that:
-
-- weaken loopback, recorded sharing choices, versioned authorization, legacy
-  consent, redaction, pseudonymity, or deletion guarantees;
-- turn sparse or stale evidence into confident values, attribution, or support
-  claims;
-- allow replay, retries, partial writes, account switching, or source duplication
-  to overcount or corrupt durable state;
-- broaden schemas, routes, platform access, filesystem access, or network access
-  without a closed contract and negative tests;
-- blur source, runtime, installed-artifact, release, and deployment gates;
-- hand-edit generated evidence, bypass public facades, or weaken a ratchet/test;
-- make remote writes, secret use, or destructive behavior implicit;
-- update behavior without the corresponding tests and maintained documentation.
-
-## Maintain this guidance
-
-- Keep the root file under 200 lines and the deepest root-to-scope instruction
-  chain comfortably below Codex's default 32 KiB project-doc limit.
-- Add nested guidance only for stable local contracts; keep procedures in runbooks.
-- State each rule once, prefer durable principles to examples, and remove stale
-  guidance when the code or authority changes.
-- Keep `test/agent-guidance.test.js` aligned with guidance scope and budgets.
+Flag changes that add network access, widen what is read from omp, store or
+log content or raw identifiers, convert missing values to zero, weaken host or
+CSP checks, allow double counting, downgrade the schema, or change behavior
+without tests and docs.
