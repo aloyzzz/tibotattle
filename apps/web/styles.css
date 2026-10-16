@@ -404,7 +404,7 @@ caption { text-align: left; padding: 10px 12px 4px; font-weight: 600; font-size:
 th, td { padding: 7px 12px; text-align: left; border-bottom: 1px solid var(--grid); white-space: nowrap; }
 thead th { color: var(--ink-2); font-weight: 600; font-size: 12.5px; background: var(--surface); position: sticky; top: 0; }
 tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
-tbody th { font-weight: 500; }
+tbody th { font-weight: 500; white-space: normal; overflow-wrap: anywhere; min-width: 8.5em; max-width: 22em; }
 th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
 td .sub, th .sub { display: block; color: var(--ink-3); font-size: 12px; font-weight: 400; }
 td.share-cell { min-width: 120px; }
