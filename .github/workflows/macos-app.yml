@@ -1,0 +1,94 @@
+name: macOS app
+
+# Builds and tests the native Swift app (apps/macos). The uploaded zip is a
+# short-lived CI build output for testing, not a release: there is no
+# publication, updater feed or notarization.
+
+on:
+  push:
+    paths:
+      - 'apps/macos/**'
+      - 'apps/web/**'
+      - 'test/fixtures/golden/**'
+      - 'src/**'
+      - '.github/workflows/macos-app.yml'
+  pull_request:
+    paths:
+      - 'apps/macos/**'
+      - 'apps/web/**'
+      - 'test/fixtures/golden/**'
+      - 'src/**'
+      - '.github/workflows/macos-app.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: macos-app-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build and test (macOS)
+    # macos-15 ships Xcode 16 (Swift 6 compiler). If it is unavailable, use
+    # macos-14 and add `sudo xcode-select -s /Applications/Xcode_16.2.app`.
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Node tests (includes golden vectors)
+        run: npm test
+
+      - name: Swift toolchain
+        run: |
+          swift --version
+          xcodebuild -version
+
+      - name: Swift build
+        working-directory: apps/macos
+        run: swift build
+
+      - name: Swift tests
+        working-directory: apps/macos
+        run: swift test
+
+      - name: Build app bundle
+        run: ./apps/macos/build-app.sh
+
+      - name: Launch smoke (synthetic agent dir)
+        # Hosted macOS runners have a logged-in GUI session, so a MenuBarExtra
+        # app can start. This proves the bundle launches and stays up; it does
+        # not exercise the menu bar UI.
+        run: |
+          AGENT="$RUNNER_TEMP/agent"
+          STATE="$RUNNER_TEMP/tibotattle-state"
+          mkdir -p "$AGENT/sessions" "$STATE"
+          PI_CODING_AGENT_DIR="$AGENT" TIBOTATTLE_STATE_DIR="$STATE" \
+            ./apps/macos/dist/TiboTattle.app/Contents/MacOS/TiboTattle &
+          PID=$!
+          sleep 5
+          if ! kill -0 "$PID" 2>/dev/null; then
+            wait "$PID" || true
+            echo "app exited during the launch smoke" >&2
+            exit 1
+          fi
+          kill "$PID"
+          wait "$PID" 2>/dev/null || true
+          test -f "$STATE/identity.key"
+          echo "app stayed up for 5 s and created its state directory"
+
+      - name: Upload app (CI build output)
+        uses: actions/upload-artifact@v4
+        with:
+          name: TiboTattle-macos
+          path: apps/macos/dist/TiboTattle-macos.zip
+          retention-days: 14
+          if-no-files-found: error
