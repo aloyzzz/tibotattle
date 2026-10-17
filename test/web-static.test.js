@@ -108,6 +108,13 @@ test('app.js follows the API contract', () => {
   assert.match(jsCode, /addEventListener\('change'/);
 });
 
+test('app.js works under the native app scheme (tibotattle://app/)', () => {
+  assert.match(jsCode, /new URL\(path, window\.location\.href\)/, 'API URLs resolve against the page URL');
+  assert.doesNotMatch(jsCode, /location\.origin/, 'origin is "null" for custom schemes');
+  assert.match(jsCode, /addEventListener\('tibotattle-change', scheduleRefetch\)/);
+  assert.match(jsCode, /setInterval\(pollStatus, POLL_MS\)/, 'polls /api/status when there is no event stream');
+});
+
 test('app.js guards localStorage access', () => {
   const uses = [...jsCode.matchAll(/localStorage\.(getItem|setItem|removeItem)/g)];
   assert.ok(uses.length >= 2);

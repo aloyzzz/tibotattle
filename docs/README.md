@@ -9,7 +9,9 @@ contracts and must be updated in the same change when a contract moves.
 | [user-guide.md](user-guide.md) | Install, run, dashboard pages, how speed and allowance are measured |
 | [reference/architecture.md](reference/architecture.md) | Layout, omp sources, module contracts, API routes |
 | [reference/privacy.md](reference/privacy.md) | Exactly what is read, stored and never stored; how to delete |
+| [reference/macos-app.md](reference/macos-app.md) | Native macOS menu-bar app: shape, compatibility with the Node index, Swift API |
 | [decisions/2026-10-16-omp-edition.md](decisions/2026-10-16-omp-edition.md) | Why the Codex edition and its hosted surface were retired |
+| [decisions/2026-10-17-native-macos-app.md](decisions/2026-10-17-native-macos-app.md) | Why macOS gets a native Swift app beside the Electron shell |
 
 Repository-level guides: [README](../README.md),
 [CONTRIBUTING](../CONTRIBUTING.md), [SECURITY](../SECURITY.md),

@@ -261,7 +261,9 @@ class ApiError extends Error {
 }
 
 async function api(path, params = {}, { signal, method = 'GET' } = {}) {
-  const url = new URL(path, window.location.origin);
+  // Resolve against the page URL, not location.origin: under the native macOS
+  // app's tibotattle://app/ scheme the origin serializes as "null".
+  const url = new URL(path, window.location.href);
   for (const [k, v] of Object.entries(params)) if (v != null) url.searchParams.set(k, String(v));
   url.searchParams.set('tz', String(tzOffset()));
   const headers = { Accept: 'application/json' };
@@ -1233,9 +1235,21 @@ function renderStatus(st) {
   line.replaceChildren(...nodes);
 }
 
+// Last index generation seen in /api/status; the polling fallback refetches
+// when it changes.
+let lastGeneration = null;
+function noteGeneration(st) {
+  const gen = st && isNum(st.generation) ? st.generation : null;
+  const changed = gen != null && lastGeneration != null && gen !== lastGeneration;
+  if (gen != null) lastGeneration = gen;
+  return changed;
+}
+
 async function loadStatus() {
   try {
-    renderStatus(await api('/api/status'));
+    const st = await api('/api/status');
+    noteGeneration(st);
+    renderStatus(st);
   } catch {
     const line = $('#status-line');
     if (line) line.textContent = 'Status unavailable.';
@@ -1259,22 +1273,70 @@ function setLive(stateName, label) {
   if (text) text.textContent = label;
 }
 
+// Polling fallback for hosts without server-sent events (the native macOS app
+// answers /api/events with not_found and pushes `tibotattle-change` instead).
+const POLL_MS = 5000;
+let pollTimer = null;
+async function pollStatus() {
+  let st;
+  try {
+    st = await api('/api/status');
+  } catch {
+    setLive('offline', 'Offline');
+    return;
+  }
+  setLive('live', 'Live');
+  if (noteGeneration(st)) scheduleRefetch();
+  else renderStatus(st);
+}
+
+function startPolling() {
+  if (pollTimer) return;
+  pollTimer = setInterval(pollStatus, POLL_MS);
+  pollStatus();
+}
+
+function stopPolling() {
+  clearInterval(pollTimer);
+  pollTimer = null;
+}
+
 let events = null;
 let reconnectTimer = null;
+let eventsEverOpened = false;
 function connectEvents() {
   if (typeof window.EventSource !== 'function') {
-    setLive('offline', 'No live updates');
+    startPolling();
     return;
   }
   if (events) events.close();
   setLive('connecting', 'Connecting');
-  const es = new EventSource('/api/events');
+  let es;
+  try {
+    es = new EventSource('/api/events');
+  } catch {
+    events = null;
+    startPolling();
+    return;
+  }
   events = es;
-  es.addEventListener('open', () => setLive('live', 'Live'));
+  es.addEventListener('open', () => {
+    eventsEverOpened = true;
+    stopPolling();
+    setLive('live', 'Live');
+  });
   es.addEventListener('change', () => scheduleRefetch());
   es.addEventListener('error', () => {
     if (es.readyState === EventSource.CLOSED) {
+      if (!eventsEverOpened) {
+        // The host has no event stream at all: poll instead of reconnecting.
+        es.close();
+        events = null;
+        startPolling();
+        return;
+      }
       setLive('offline', 'Offline');
+      startPolling();
       clearTimeout(reconnectTimer);
       reconnectTimer = setTimeout(connectEvents, 10000);
     } else {
@@ -1331,6 +1393,8 @@ function init() {
     render({ focus: true });
   });
   window.addEventListener('scroll', () => tooltip.hide(), { passive: true });
+  // Dispatched by the native macOS app after a refresh that added rows.
+  window.addEventListener('tibotattle-change', scheduleRefetch);
   if (!window.location.hash.startsWith('#/')) window.history.replaceState(null, '', '#/overview');
   render();
   loadStatus();

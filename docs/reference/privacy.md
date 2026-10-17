@@ -55,6 +55,14 @@ The desktop shell uses its Electron user-data folder as the state directory, so
 Chromium's own profile files (for example local storage holding the selected
 reporting period) also live there.
 
+The native macOS app uses the same macOS state directory, key and index as the
+CLI. Outside it, the app stores only its popover period choice and dashboard
+window position in its macOS preferences (`io.github.aloyzzz.tibotattle`) and,
+if you turn it on, a login item registered with macOS. Its dashboard web view
+uses a non-persistent WebKit data store, so page storage is kept in memory and
+discarded when the window closes. The web view refuses any navigation outside
+`tibotattle://app/`, and the app opens no network socket.
+
 The index holds:
 
 - **Per request**: timestamp; provider, api, model, upstream provider, service
@@ -95,4 +103,6 @@ CLI and API errors are fixed codes such as `store_newer` or `forbidden_host`.
 
 That removes everything TiboTattle stored. omp's own files are untouched; if
 TiboTattle runs again it rebuilds the index from them. Removing the desktop app
-does not remove its state directory; delete it as above.
+does not remove its state directory; delete it as above. For the native macOS
+app, also turn off Start at login before deleting the app and, optionally, run
+`defaults delete io.github.aloyzzz.tibotattle`.

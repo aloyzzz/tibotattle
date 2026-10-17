@@ -23,6 +23,8 @@ silent, `architecture.md` wins.
   a `WKURLSchemeHandler` on `tibotattle://app/`. `/api/*` requests are answered
   in-process by the Swift engine with exactly the JSON shapes `src/server.js`
   returns. No HTTP server and no listening socket exist in the native app.
+  `/api/events` is not served (404 `not_found`); the dashboard then polls
+  `/api/status` every 5 s and also listens for the `tibotattle-change` event.
 - **Live updates**: an FSEvents stream on the session roots and the agent.db
   directory (latency 1 s), plus a 60 s fallback timer. A refresh that adds rows
   updates the menu bar and popover and calls

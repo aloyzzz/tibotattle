@@ -327,8 +327,18 @@ Errors: `{ error: '<code>' }` with 400/403/404/405/500; never echo input.
 Pages via hash routes: `#/overview`, `#/usage`, `#/performance`,
 `#/allowance`, `#/projects`. Header has the reporting-period control (persisted
 in `localStorage`, wrapped in try/catch) and a refresh button. Subscribes to
-`/api/events` and refetches the current page on `change`. Charts are inline
-SVG, no external assets, works offline, light and dark themes.
+`/api/events` and refetches the current page on `change`. It also refetches on
+a `tibotattle-change` window event (sent by the native macOS app), and when
+EventSource is missing or never opens it polls `/api/status` every 5 s and
+refetches when `generation` changes. API URLs are resolved against
+`window.location.href`, so the page works under `tibotattle://app/` as well as
+the loopback server. Charts are inline SVG, no external assets, works offline,
+light and dark themes.
+
+### Native macOS app (`apps/macos`)
+
+A Swift menu-bar app with its own Swift port of the core. See
+[`macos-app.md`](./macos-app.md).
 
 ### Desktop (`apps/electron`)
 

@@ -65,6 +65,35 @@ npm run desktop
 See [the user guide](docs/user-guide.md) for the pages, how speed is measured
 and where allowance data comes from.
 
+## Native macOS app
+
+`apps/macos` is a small native Swift menu-bar app for macOS 13 or newer
+(universal: Apple silicon and Intel). It needs no Node.js and no Electron: the
+menu bar shows the lowest remaining allowance, the popover shows allowance,
+period totals and the top models, and **Open Dashboard** shows the same
+dashboard in a window, served from inside the app without any network socket.
+It reads and extends the same index as the CLI.
+
+Build it on a Mac with Xcode 16 or its command-line tools:
+
+```sh
+apps/macos/build-app.sh   # -> apps/macos/dist/TiboTattle.app and TiboTattle-macos.zip
+```
+
+Every CI run of the [macOS app workflow](.github/workflows/macos-app.yml) also
+attaches `TiboTattle-macos.zip` as a build artifact (kept 14 days). It is a CI
+build output, not a release.
+
+The app is ad-hoc signed and not notarized, so Gatekeeper blocks the first
+launch. Right-click the app and choose **Open**, or clear the quarantine flag:
+
+```sh
+xattr -dr com.apple.quarantine /path/to/TiboTattle.app
+```
+
+See [the macOS app reference](docs/reference/macos-app.md) and the
+[decision record](docs/decisions/2026-10-17-native-macos-app.md).
+
 ## Where data comes from
 
 | Source | Default location | Used for |

@@ -48,6 +48,39 @@ tooltip. The tray menu has **Open dashboard**, **Refresh now**, **Start at
 login** (macOS and Windows) and **Quit**. Closing the window on macOS keeps the
 app in the tray. There is no installer and no automatic update.
 
+### Native macOS app
+
+On macOS 13 or newer you can use the native menu-bar app instead of the CLI or
+Electron. It is one small universal app that uses only frameworks built into
+macOS; it needs no Node.js.
+
+Build it with `apps/macos/build-app.sh` (Xcode 16 or its command-line tools),
+or download `TiboTattle-macos.zip` from a run of the repository's **macOS app**
+CI workflow. Move `TiboTattle.app` to `/Applications`. The app is ad-hoc signed
+and not notarized, so the first launch needs right-click → **Open**, or
+`xattr -dr com.apple.quarantine /Applications/TiboTattle.app`.
+
+- The menu bar shows the lowest remaining allowance, such as `62%` (`62%?`
+  when every reading is stale), or only an icon when omp has recorded no
+  allowance.
+- Click it for allowance meters with reset countdowns and pace, totals for the
+  chosen period (requests, tokens, cost with unpriced requests, cache hit
+  rate) and the top five models with median decode speed and TTFT. The period
+  choice is remembered.
+- **Open Dashboard** shows the full dashboard in a window. It is served from
+  inside the app; no web server or network port is opened. Closing the window
+  frees its memory; the app keeps running in the menu bar.
+- **Refresh** re-scans immediately; otherwise the app updates within about a
+  second of omp writing, and at least every minute.
+- **Start at login** registers the app as a login item (macOS may ask you to
+  approve it in System Settings › General › Login Items). **Quit** stops it.
+
+The app uses the same state directory and index as the CLI
+(`~/Library/Application Support/TiboTattle`, or `TIBOTATTLE_STATE_DIR`), and
+follows `PI_CODING_AGENT_DIR` and `PI_CONFIG_DIR` like the CLI when they are
+set in its environment. If the index was written by a newer TiboTattle, the
+app shows `store_newer` and leaves the index unchanged.
+
 ## Dashboard pages
 
 Choose the reporting period (24 h, 7 d, 30 d or all) in the header; the choice

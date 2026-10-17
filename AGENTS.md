@@ -21,11 +21,14 @@ and, for anything touching data handling, `docs/reference/privacy.md`.
 | `bin/tibotattle.js` | CLI: `serve`, `scan`, `report`, `doctor` |
 | `apps/web/` | dashboard (plain HTML/CSS/JS, no build step) |
 | `apps/electron/` | optional desktop shell: tray and window on the loopback server |
+| `apps/macos/` | native Swift menu-bar app (`docs/reference/macos-app.md`): engine in `TiboTattleCore`, UI in `TiboTattle` |
 | `test/` | `node:test` suites with synthetic fixtures |
 | `docs/` | architecture and privacy references, decisions, user guide |
 
 Dependencies point inward: `apps/` and `bin/` compose `src/`; `src/analysis/`
 is pure and does no I/O; nothing in `src/` imports `apps/`, `bin/` or `test/`.
+The Swift engine reimplements `src/` and must match it through the shared
+vectors in `test/fixtures/golden/`.
 
 ## Invariants
 
@@ -34,7 +37,8 @@ matching tests and updated references.
 
 - **Offline.** No outbound network requests anywhere: no telemetry, update
   checks, crash upload, remote fonts, CDNs or analytics. The Electron shell
-  blocks every request outside its own loopback origin.
+  blocks every request outside its own loopback origin; the macOS app blocks
+  every navigation outside `tibotattle://app/` and opens no socket.
 - **Loopback only.** The server binds `127.0.0.1`, validates the `Host` header,
   sends a strict CSP, and requires `X-TiboTattle: 1` on mutating routes.
 - **Read-only toward omp.** omp files are never written. `agent.db` is opened
@@ -57,7 +61,8 @@ matching tests and updated references.
 - **No hosted surface.** No sharing, accounts, uploads, Worker, cloud service,
   updater feed or release-publication tooling. These were removed on purpose
   (`docs/decisions/2026-10-16-omp-edition.md`).
-- **Zero runtime dependencies.** Node.js 22.13+ built-ins only. Electron is the
+- **Zero runtime dependencies.** Node.js 22.13+ built-ins only (the macOS app:
+  system frameworks only, no Swift packages). Electron is the
   single dev dependency. Do not add packages without a decision record.
 - **Fixed error codes.** CLI and API errors are short codes; never print stack
   traces, paths or input back to the user.
@@ -82,6 +87,12 @@ matching tests and updated references.
 - The Electron shell needs `npm install` and a GUI session. A headless smoke
   (for example under `xvfb-run`) does not prove macOS or Windows tray behavior;
   report what was actually exercised.
+- The macOS app (`apps/macos`) builds and tests only on macOS with Xcode 16:
+  `swift build` and `swift test` in `apps/macos`, then
+  `apps/macos/build-app.sh`. CI runs these in
+  `.github/workflows/macos-app.yml`; without a Swift toolchain, say the Swift
+  code was not compiled. Golden vectors change only via
+  `UPDATE_GOLDEN=1 node --test test/golden-vectors.test.js`.
 - If a check cannot run in the current environment, say so; do not report it
   as passing.
 

@@ -5,6 +5,14 @@ SemVer-compatible labels; there is no API stability promise before 1.0.
 
 ## [Unreleased]
 
+- Add a native Swift macOS menu-bar app (`apps/macos`): no Node.js or Electron,
+  shows the lowest remaining allowance in the menu bar, a popover with
+  allowance, totals and model speed, and the full dashboard in a native web
+  view. It shares the CLI's index, and shared test vectors keep both
+  implementations identical. Built and tested on macOS CI; ad-hoc signed, not
+  notarized.
+- The dashboard falls back to polling when live events are unavailable.
+
 ## 0.2.0 - 2026-10-16 (omp edition)
 
 TiboTattle is now a local-first monitor for the

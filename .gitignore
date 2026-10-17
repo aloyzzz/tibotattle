@@ -9,3 +9,5 @@ state/
 identity.key
 .DS_Store
 *.log
+apps/macos/.build/
+apps/macos/dist/
