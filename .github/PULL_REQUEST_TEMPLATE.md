@@ -4,9 +4,10 @@
 
 ## Verification
 
-- [ ] `npm test`
-- [ ] Other checks (describe, for example `node bin/tibotattle.js doctor`,
-      dashboard or desktop checks and the platform used):
+- [ ] `swift build` (in `apps/macos`, macOS with Xcode 16)
+- [ ] `swift test` (in `apps/macos`; the `macOS app` CI workflow counts)
+- [ ] Other checks (describe, for example launching the built app, and the
+      macOS version and Mac architecture used). If nothing was compiled, say so.
 
 ## Content attestation
 

@@ -1,5 +1,5 @@
 // TPS and TTFT statistics over RequestRecord rows
-// (src/analysis/performance.js). Pure.
+// Pure.
 //
 // Eligible rows: purpose 'turn', stopReason stop|toolUse|length, output > 0,
 // durationMs > 0. Missing duration/TTFT never counts as zero.

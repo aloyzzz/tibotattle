@@ -1,4 +1,5 @@
-// JavaScript semantics the Node implementation relies on, reproduced exactly:
+// JavaScript semantics that the original (retired) implementation at f140a49
+// used, reproduced exactly because digests, index values and API bodies depend on them:
 // UTF-16 string ordering, Math.round, Number#toString, Number.isSafeInteger,
 // Date.parse (ISO formats) and Date#toISOString day keys.
 

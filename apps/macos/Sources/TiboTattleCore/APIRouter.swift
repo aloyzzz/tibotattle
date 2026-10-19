@@ -1,6 +1,7 @@
-// In-process JSON API with the same routes, validation, error codes and body
-// shapes as src/server.js (minus static files, SSE and the Host check, which
-// do not exist without a socket). Errors are fixed codes; input is never echoed.
+// In-process JSON API: routes, validation, error codes and body shapes are
+// documented in docs/reference/architecture.md (the original loopback server at
+// f140a49 also served static files, SSE and a Host check, none of which exist
+// without a socket). Errors are fixed codes; input is never echoed.
 
 import Foundation
 
@@ -18,7 +19,7 @@ public enum APIRouter {
         var tier: TierFilter
     }
 
-    /// Answers the same routes as src/server.js (minus static files and /api/events).
+    /// Answers /api/status, /usage, /performance, /allowance, /overview and /refresh.
     /// Returns HTTP-like status and a UTF-8 JSON body. `path` may carry a
     /// `?query`, which is then parsed (with duplicate detection) and merged
     /// with `query`. Blocks while POST /api/refresh runs; call off the main thread.

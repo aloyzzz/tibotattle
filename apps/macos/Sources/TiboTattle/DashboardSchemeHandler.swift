@@ -7,7 +7,7 @@
 // - /api/* is answered in-process by APIRouter on a background queue.
 //   /api/events (server-sent events) does not exist here; the dashboard falls
 //   back to polling /api/status and to the `tibotattle-change` event.
-// - Every response carries the same security headers as src/server.js.
+// - Every response carries the security headers in `securityHeaders`.
 // - WebKit may stop a task at any time; a stopped task never receives
 //   another callback.
 
@@ -33,7 +33,7 @@ final class DashboardSchemeHandler: NSObject, WKURLSchemeHandler {
         "Cross-Origin-Opener-Policy": "same-origin",
     ]
 
-    /// URL path -> (file name inside Resources/web, content type). Same as src/server.js.
+    /// URL path -> (file name inside Resources/web, content type).
     static let staticFiles: [String: (file: String, type: String)] = [
         "/": ("index.html", "text/html; charset=utf-8"),
         "/index.html": ("index.html", "text/html; charset=utf-8"),
@@ -42,7 +42,7 @@ final class DashboardSchemeHandler: NSObject, WKURLSchemeHandler {
         "/favicon.svg": ("favicon.svg", "image/svg+xml"),
     ]
 
-    /// GET routes whose query src/server.js validates (parseQuery).
+    /// GET routes whose query APIRouter validates (parseQuery).
     static let queryRoutes: Set<String> = ["/api/status", "/api/usage", "/api/performance", "/api/allowance", "/api/overview"]
 
     static func isAppURL(_ url: URL?) -> Bool {
@@ -139,7 +139,7 @@ final class DashboardSchemeHandler: NSObject, WKURLSchemeHandler {
 
     private func routeAPI(_ token: Int, method: String, path: String, components: URLComponents,
                           request: URLRequest, url: URL) {
-        // src/server.js rejects a repeated period, tz or tier parameter.
+        // A repeated period, tz or tier parameter is rejected with 400.
         var query: [String: String] = [:]
         var duplicate: String?
         for item in components.percentEncodedQueryItems ?? [] {

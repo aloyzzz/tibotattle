@@ -1,4 +1,4 @@
-// Reporting periods and day bucketing (src/analysis/period.js). Pure.
+// Reporting periods and day bucketing. Pure.
 
 import Foundation
 
@@ -82,10 +82,10 @@ extension PeriodRange: Codable {
 public enum TierFilter: Sendable, Equatable {
     case all, unreported, tier(String)
 
-    /// TIER_FILTERS in src/analysis/performance.js.
+    /// The accepted tier filter names.
     public static let names = ["all", "unreported", "auto", "default", "flex", "scale", "priority", "ultrafast"]
 
-    /// nil for names outside TIER_FILTERS.
+    /// nil for names outside `names`.
     public init?(name: String) {
         switch name {
         case "all": self = .all

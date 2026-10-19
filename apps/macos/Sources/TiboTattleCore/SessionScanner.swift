@@ -1,5 +1,4 @@
 // Session file discovery and bounded, incremental, replay-safe reading
-// (src/omp/session-scanner.js).
 //
 // Only complete newline-terminated lines are consumed; the cursor is the byte
 // offset just past the last complete line. Oversized lines are discarded while
@@ -21,7 +20,7 @@ public struct ScanResult: Sendable, Equatable {
     public var linesSkipped: Int = 0
 }
 
-/// File identity as Node's bigint fstat reports it.
+/// File identity: dev/ino as decimal strings, mtime in ms with microsecond precision.
 struct FileIdentity: Equatable {
     var dev: String
     var ino: String
@@ -41,7 +40,7 @@ public enum SessionScanner {
     static let modeRegular = 0o100000
 
     /// Regular *.jsonl files under each root, without following symlinks,
-    /// in the same depth-first, UTF-16-sorted order as Node.
+    /// in depth-first, UTF-16-sorted order.
     public static func discoverSessionFiles(_ sessionRoots: [String], maxFiles: Int = 200000) -> [DiscoveredFile] {
         var found: [DiscoveredFile] = []
         var seen = Set<String>()
@@ -113,7 +112,7 @@ public enum SessionScanner {
         if let parsed = try? JSONSerialization.jsonObject(with: data, options: []) {
             return parsed
         }
-        // Node decodes the bytes as UTF-8 with replacement characters first.
+        // Invalid UTF-8 is repaired with replacement characters first (as the original implementation did).
         let repaired = Data(String(decoding: data, as: UTF8.self).utf8)
         if repaired != data, let parsed = try? JSONSerialization.jsonObject(with: repaired, options: []) {
             return parsed
@@ -126,7 +125,7 @@ public enum SessionScanner {
         let ino = UInt64(st.st_ino)
         let sec = Int64(st.st_mtimespec.tv_sec)
         let nsec = Int64(st.st_mtimespec.tv_nsec)
-        // Node: Number(stat.mtimeNs / 1000n) / 1000 (microsecond precision).
+        // Microsecond precision: Number(mtimeNs / 1000) / 1000.
         let totalNs = sec &* 1_000_000_000 &+ nsec
         let micros = totalNs / 1000
         return FileIdentity(dev: String(dev), ino: String(ino), size: Int(st.st_size),

@@ -1,6 +1,6 @@
-// omp source locations and the TiboTattle state directory (src/paths.js).
-// Path strings are built exactly like Node's path.resolve/path.join so keyed
-// digests of paths agree between the two implementations.
+// omp source locations and the TiboTattle state directory.
+// Path strings are built like POSIX path.resolve/path.join so keyed digests of
+// paths stay stable (the original implementation at f140a49 used the same rules).
 
 import Foundation
 
@@ -72,7 +72,7 @@ public enum StatePaths {
     }
 }
 
-/// POSIX path helpers matching Node's path.posix semantics.
+/// POSIX path helpers (path.posix semantics, kept so path digests stay stable).
 enum PathUtil {
     static func nonEmpty(_ value: String?) -> String? {
         guard let value = value else { return nil }

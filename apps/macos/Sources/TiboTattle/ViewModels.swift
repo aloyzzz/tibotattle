@@ -1,5 +1,5 @@
 // Small Decodable view models for the popover. They decode only the fields the
-// popover shows, using the JSON keys of src/server.js and src/analysis/*.js,
+// popover shows, using the JSON keys of the in-process API (docs/reference/architecture.md),
 // so the app target does not depend on TiboTattleCore's Swift summary types.
 // Every value is optional: a missing or null value stays nil and is shown as
 // "—" or "unpriced", never as 0.
@@ -100,7 +100,7 @@ struct StatusDTO: Decodable, Sendable {
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         generation = try? c.decodeIfPresent(Double.self, forKey: .generation)
-        // Node sends epoch milliseconds; tolerate an ISO string as app.js does.
+        // The API sends epoch milliseconds; tolerate an ISO string as app.js does.
         if let ms = try? c.decodeIfPresent(Double.self, forKey: .lastRefreshAt) {
             lastRefreshAt = ms
         } else if let text = try? c.decodeIfPresent(String.self, forKey: .lastRefreshAt) {
@@ -159,7 +159,7 @@ extension AllowanceDTO {
 }
 
 /// The lowest remaining allowance among fresh series, or among all series
-/// (marked stale) when none is fresh. Mirrors the Electron tray logic.
+/// (marked stale) when none is fresh. Drives the menu-bar label.
 struct LowestAllowance: Sendable {
     var series: AllowanceDTO
     var remaining: Double

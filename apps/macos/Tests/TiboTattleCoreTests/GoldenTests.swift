@@ -3,7 +3,8 @@ import SQLite3
 import XCTest
 @testable import TiboTattleCore
 
-/// Swift results must equal the Node implementation's vectors.
+/// Swift results must equal the frozen golden vectors (originally generated
+/// from the retired Node implementation at f140a49).
 final class GoldenTests: XCTestCase {
     func testKeyedDigests() throws {
         let g = try Golden.load("keyed.json")
@@ -111,8 +112,8 @@ final class GoldenTests: XCTestCase {
         assertJSONEqual(.array(series.map { $0.json }), g["expected"], "allowance")
     }
 
-    /// An index written by the Swift Store has exactly Node's tables, columns,
-    /// indexes and initial metadata.
+    /// An index written by the Swift Store has exactly the frozen schema v1
+    /// tables, columns, indexes and initial metadata.
     func testIndexSchemaMatchesNode() throws {
         let g = try Golden.load("schema.json")
         let tmp = try TempDir()

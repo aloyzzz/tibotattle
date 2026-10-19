@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a problem with the TiboTattle CLI, dashboard or desktop app.
+description: Report a problem with the TiboTattle macOS app.
 labels: ["bug"]
 body:
   - type: markdown
@@ -11,8 +11,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: TiboTattle version or commit
-      placeholder: 0.2.0 or a commit hash
+      label: TiboTattle app version or commit (Finder › Get Info shows the version)
+      placeholder: 0.3.0 or a commit hash
     validations:
       required: true
   - type: dropdown
@@ -20,24 +20,36 @@ body:
     attributes:
       label: Where does it happen?
       options:
-        - CLI (serve, scan, report, doctor)
-        - Browser dashboard
-        - Desktop app (Electron)
+        - Menu bar item
+        - Popover
+        - Dashboard window
+        - Start at login
+        - Launching or installing the app
     validations:
       required: true
   - type: input
-    id: environment
+    id: macos
     attributes:
-      label: Operating system, Node.js version and omp version
-      placeholder: macOS 26.0 arm64, Node.js 22.13.1, omp x.y.z
+      label: macOS version
+      placeholder: macOS 15.0
     validations:
       required: true
-  - type: textarea
-    id: doctor
+  - type: dropdown
+    id: arch
     attributes:
-      label: Output of `node bin/tibotattle.js doctor`
-      description: Run it without `--show-paths` so no local paths are included.
-      render: text
+      label: Mac architecture
+      options:
+        - Apple silicon (arm64)
+        - Intel (x86_64)
+    validations:
+      required: true
+  - type: input
+    id: omp
+    attributes:
+      label: omp version
+      placeholder: omp x.y.z
+    validations:
+      required: true
   - type: textarea
     id: repro
     attributes:
@@ -58,7 +70,7 @@ body:
     id: actual
     attributes:
       label: Actual behavior
-      description: Include any fixed error code printed (for example `error store_newer`). Check screenshots for private data before sharing.
+      description: Include any fixed error code the popover shows (for example `store_newer`). Check screenshots for private data before sharing. Never paste session content.
     validations:
       required: true
   - type: checkboxes

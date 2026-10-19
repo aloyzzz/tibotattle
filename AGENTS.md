@@ -1,9 +1,10 @@
 # TiboTattle agent guidance
 
-TiboTattle is a local-first monitor for the oh-my-pi (`omp`) coding agent. It
-reads omp's session logs and `usage_history` snapshots, keeps a content-free
-SQLite index, and serves a loopback-only dashboard. `CLAUDE.md` imports this
-file for all agents.
+TiboTattle is a local-first, native macOS menu-bar monitor for the oh-my-pi
+(`omp`) coding agent. It reads omp's session logs and `usage_history`
+snapshots, keeps a content-free SQLite index, and shows a popover and a
+dashboard window served in-process. `CLAUDE.md` imports this file for all
+agents.
 
 Before changing code, read `docs/reference/architecture.md` (module contracts)
 and, for anything touching data handling, `docs/reference/privacy.md`.
@@ -12,23 +13,20 @@ and, for anything touching data handling, `docs/reference/privacy.md`.
 
 | Path | Owns |
 |---|---|
-| `src/paths.js`, `src/secret.js` | omp source locations, state directory, local HMAC key |
-| `src/omp/` | session-record normalization, session scanner, quota reader |
-| `src/store.js` | SQLite index: schema, transactions, queries |
-| `src/analysis/` | periods, usage, performance and allowance summaries (pure) |
-| `src/monitor.js` | refresh orchestration, file watching, change events |
-| `src/server.js` | loopback HTTP server, JSON API, SSE |
-| `bin/tibotattle.js` | CLI: `serve`, `scan`, `report`, `doctor` |
-| `apps/web/` | dashboard (plain HTML/CSS/JS, no build step) |
-| `apps/electron/` | optional desktop shell: tray and window on the loopback server |
-| `apps/macos/` | native Swift menu-bar app (`docs/reference/macos-app.md`): engine in `TiboTattleCore`, UI in `TiboTattle` |
-| `test/` | `node:test` suites with synthetic fixtures |
+| `apps/macos/Sources/TiboTattleCore/` | engine: paths, keyed digests, record normalization, scanner, quota reader, SQLite store, analysis (pure), `Engine`, `APIRouter`, `SourceWatcher` |
+| `apps/macos/Sources/TiboTattle/` | SwiftUI/AppKit app: menu bar, popover, dashboard window and `tibotattle://app/` scheme handler |
+| `apps/macos/Tests/TiboTattleCoreTests/` | XCTest suites, synthetic fixtures, frozen golden vectors in `Fixtures/golden/` |
+| `apps/macos/Resources/` | `Info.plist` (version of record), `AppIcon.icns` |
+| `apps/macos/build-app.sh` | universal release build, ad-hoc signed app bundle and zip |
+| `apps/web/` | dashboard (plain HTML/CSS/JS, no build step), bundled into the app |
 | `docs/` | architecture and privacy references, decisions, user guide |
 
-Dependencies point inward: `apps/` and `bin/` compose `src/`; `src/analysis/`
-is pure and does no I/O; nothing in `src/` imports `apps/`, `bin/` or `test/`.
-The Swift engine reimplements `src/` and must match it through the shared
-vectors in `test/fixtures/golden/`.
+Dependencies point inward: the `TiboTattle` app target composes
+`TiboTattleCore`; the core imports no AppKit, SwiftUI or WebKit and never
+imports the app. The analysis types are pure and do no I/O.
+
+The earlier Node.js implementation, CLI and Electron shell were removed and
+live only in git history at `f140a49` (`git show f140a49:src/...`).
 
 ## Invariants
 
@@ -36,11 +34,9 @@ Changing one of these needs an explicit decision record in `docs/decisions/`,
 matching tests and updated references.
 
 - **Offline.** No outbound network requests anywhere: no telemetry, update
-  checks, crash upload, remote fonts, CDNs or analytics. The Electron shell
-  blocks every request outside its own loopback origin; the macOS app blocks
-  every navigation outside `tibotattle://app/` and opens no socket.
-- **Loopback only.** The server binds `127.0.0.1`, validates the `Host` header,
-  sends a strict CSP, and requires `X-TiboTattle: 1` on mutating routes.
+  checks, crash upload, remote fonts, CDNs or analytics. The app opens no
+  socket and runs no server; the dashboard web view blocks every navigation
+  outside `tibotattle://app/`.
 - **Read-only toward omp.** omp files are never written. `agent.db` is opened
   read-only and only `usage_history` columns listed in the architecture
   reference are selected; `auth_credentials`, `email` and `account_id` are
@@ -61,44 +57,43 @@ matching tests and updated references.
 - **No hosted surface.** No sharing, accounts, uploads, Worker, cloud service,
   updater feed or release-publication tooling. These were removed on purpose
   (`docs/decisions/2026-10-16-omp-edition.md`).
-- **Zero runtime dependencies.** Node.js 22.13+ built-ins only (the macOS app:
-  system frameworks only, no Swift packages). Electron is the
-  single dev dependency. Do not add packages without a decision record.
-- **Fixed error codes.** CLI and API errors are short codes; never print stack
+- **System frameworks only.** No Swift packages and no other runtime
+  dependencies. Do not add one without a decision record.
+- **macOS only.** Minimum macOS 13. Linux and Windows are not supported
+  (`docs/decisions/2026-10-19-native-macos-only.md`).
+- **Fixed error codes.** API and UI errors are short codes; never show stack
   traces, paths or input back to the user.
 
 ## Working rules
 
 - Inspect the current files and nearby tests before editing; preserve unrelated
   changes. Keep changes small and coherent; avoid speculative abstractions.
-- Production code is ESM with static, reviewable imports.
 - Use synthetic, content-free fixtures. Never commit real omp sessions,
   `agent.db` files, paths, account data or screenshots containing them.
+- Golden vectors in `Fixtures/golden/` are frozen: they were generated from the
+  retired Node implementation and cannot be regenerated. Change one only by a
+  deliberate hand edit with a decision record.
 - When a contract changes, update tests, `docs/reference/architecture.md`,
   `docs/reference/privacy.md` and the user guide in the same change.
+- The version of record is `CFBundleShortVersionString` in
+  `apps/macos/Resources/Info.plist`; keep `CHANGELOG.md` consistent with it.
 - Do not push, publish, tag or create releases without explicit authorization.
 
 ## Validation
 
-- `npm test` runs every `node:test` suite serially. It needs no install.
-- Iterate with a single file: `node --test test/<name>.test.js`.
-- `node bin/tibotattle.js doctor` and `scan --agent-dir <synthetic dir>` give a
-  quick end-to-end check against fixture data.
-- The Electron shell needs `npm install` and a GUI session. A headless smoke
-  (for example under `xvfb-run`) does not prove macOS or Windows tray behavior;
-  report what was actually exercised.
-- The macOS app (`apps/macos`) builds and tests only on macOS with Xcode 16:
-  `swift build` and `swift test` in `apps/macos`, then
-  `apps/macos/build-app.sh`. CI runs these in
-  `.github/workflows/macos-app.yml`; without a Swift toolchain, say the Swift
-  code was not compiled. Golden vectors change only via
-  `UPDATE_GOLDEN=1 node --test test/golden-vectors.test.js`.
-- If a check cannot run in the current environment, say so; do not report it
-  as passing.
+- Build and test on macOS with Xcode 16 only: `cd apps/macos && swift build &&
+  swift test`, then `apps/macos/build-app.sh`.
+- There is no Swift toolchain in the Linux cloud sandbox, so code there can only
+  be compiled by the macOS CI workflow `.github/workflows/macos-app.yml`. If CI
+  was not run, say the Swift code was not compiled; do not report it as passing.
+- CI's launch check proves the bundle starts and creates its state directory,
+  not the menu bar or popover UI. Report what was actually exercised.
+- If a check cannot run in the current environment, say so.
 
 ## Review checklist
 
-Flag changes that add network access, widen what is read from omp, store or
-log content or raw identifiers, convert missing values to zero, weaken host or
-CSP checks, allow double counting, downgrade the schema, or change behavior
-without tests and docs.
+Flag changes that add network access or a socket, widen what is read from omp,
+store or log content or raw identifiers, convert missing values to zero, loosen
+the navigation policy or CSP, allow double counting, downgrade the schema, edit
+golden fixtures without a decision record, or change behavior without tests and
+docs.

@@ -1,12 +1,12 @@
-// Local SQLite index (src/store.js): content-free request records, quota
-// snapshots, per-file read cursors and metadata. Same schema v1 as Node, WAL,
+// Local SQLite index: content-free request records, quota
+// snapshots, per-file read cursors and metadata. Schema v1, WAL,
 // busy_timeout 5000, file mode 0600. Forward-only: a newer schema is refused
 // with `store_newer` and never rewritten.
 
 import Foundation
 import SQLite3
 
-/// Per-file read cursor; dev/ino are decimal strings exactly as Node stores them.
+/// Per-file read cursor; dev/ino are decimal strings as the schema stores them.
 public struct FileCursor: Sendable, Equatable {
     public var dev: String
     public var ino: String
@@ -142,7 +142,7 @@ extension StoreCounts: Codable {
 public final class Store: @unchecked Sendable {
     public static let schemaVersion = 1
 
-    /// Identical DDL to SCHEMA_V1 in src/store.js.
+    /// Schema v1 DDL (pinned by Fixtures/golden/schema.json).
     static let schemaV1 = """
       CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);
       CREATE TABLE IF NOT EXISTS files (

@@ -1,5 +1,5 @@
 // Current allowance per (provider, accountKey, limitId) series and a pace
-// forecast (src/analysis/allowance.js). Pure.
+// forecast. Pure.
 
 import Foundation
 

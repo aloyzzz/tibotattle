@@ -1,5 +1,11 @@
 # Decision: a native Swift menu-bar app for macOS
 
+> **Partly superseded (2026-10-19).** The Node implementation, the shared
+> index with a Node CLI and the Electron shell described here were removed;
+> the golden vectors are now frozen fixtures that can no longer be regenerated.
+> See [native-macos-only](2026-10-19-native-macos-only.md). The native app
+> design below still stands. The body is kept unchanged as history.
+
 - **Date**: 2026-10-17
 - **Status**: accepted
 - **Applies from**: 0.2.x (unreleased)

@@ -1,5 +1,5 @@
 // Pure normalization of one parsed omp session JSONL entry into an
-// allowlisted, content-free request record (src/omp/session-record.js).
+// allowlisted, content-free request record.
 // Message content is never inspected.
 
 import Foundation

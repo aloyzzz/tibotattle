@@ -1,4 +1,4 @@
-// Fixed error codes, the local HMAC key and keyed digests (src/secret.js).
+// Fixed error codes, the local HMAC key and keyed digests.
 
 import CryptoKit
 import Foundation

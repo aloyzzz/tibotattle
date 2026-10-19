@@ -1,5 +1,5 @@
 // Token, cost and request aggregates over RequestRecord rows
-// (src/analysis/usage.js). Pure.
+// Pure.
 //
 // Missing evidence: a token bucket sums only rows where it is known and is
 // null when no row knows it; costUsd sums priced rows only and is null when

@@ -3,15 +3,27 @@
 Notable user-facing changes to TiboTattle, newest first. Versions are
 SemVer-compatible labels; there is no API stability promise before 1.0.
 
-## [Unreleased]
+## 0.3.0 - 2026-10-19 (macOS only)
 
-- Add a native Swift macOS menu-bar app (`apps/macos`): no Node.js or Electron,
-  shows the lowest remaining allowance in the menu bar, a popover with
-  allowance, totals and model speed, and the full dashboard in a native web
-  view. It shares the CLI's index, and shared test vectors keep both
-  implementations identical. Built and tested on macOS CI; ad-hoc signed, not
-  notarized.
-- The dashboard falls back to polling when live events are unavailable.
+TiboTattle is now only the native macOS app. See
+[the decision record](docs/decisions/2026-10-19-native-macos-only.md).
+
+- Remove the Electron desktop shell, the Node.js command-line tool
+  (`serve`, `scan`, `report`, `doctor`), the loopback HTTP server and the
+  Node test suites. All of it remains in git history at commit `f140a49`.
+- The native Swift macOS app (`apps/macos`, macOS 13+, universal) is the only
+  product. It shows the lowest remaining allowance in the menu bar, a popover
+  with allowance, totals and model speed, and the full dashboard in a native
+  web view served in-process on `tibotattle://app/`, with no listening socket.
+  Built and tested on macOS CI; ad-hoc signed, not notarized.
+- Linux and Windows are no longer supported.
+- The golden test vectors moved into the Swift test target
+  (`apps/macos/Tests/TiboTattleCoreTests/Fixtures/golden`) and are now frozen
+  fixtures; they can no longer be regenerated from the retired Node code.
+- The dashboard falls back to polling when live events are unavailable. The
+  Swift tests check the dashboard files statically.
+- Documentation describes the Swift architecture only. The version of record
+  is `CFBundleShortVersionString` in `apps/macos/Resources/Info.plist`.
 
 ## 0.2.0 - 2026-10-16 (omp edition)
 

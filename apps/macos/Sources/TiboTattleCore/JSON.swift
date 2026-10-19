@@ -1,6 +1,6 @@
 // Ordered JSON values and a serializer that matches JavaScript's
 // JSON.stringify: explicit nulls, insertion-ordered keys and ECMAScript
-// Number#toString formatting, so API bodies equal what src/server.js sends.
+// Number#toString formatting, so API bodies and the golden vectors stay byte-stable.
 
 import Foundation
 

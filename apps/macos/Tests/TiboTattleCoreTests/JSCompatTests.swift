@@ -2,7 +2,8 @@ import Foundation
 import XCTest
 @testable import TiboTattleCore
 
-/// Expected strings come from Node (String(n), JSON.stringify, Date.parse).
+/// Expected strings are JavaScript results (String(n), JSON.stringify,
+/// Date.parse) captured from the retired Node implementation (f140a49).
 final class JSCompatTests: XCTestCase {
     func testNumberToString() {
         let cases: [(Double, String)] = [

@@ -1,5 +1,12 @@
 # Decision: TiboTattle becomes a local-first monitor for omp
 
+> **Partly superseded (2026-10-19).** The Node.js runtime, command-line
+> tool and Electron shell described here were removed; TiboTattle is now only
+> the native macOS app. See
+> [native-macos-only](2026-10-19-native-macos-only.md). The removal of the
+> hosted and sharing surface below still stands. The body is kept unchanged as
+> history.
+
 - **Date**: 2026-10-16
 - **Status**: accepted
 - **Applies from**: 0.2.0

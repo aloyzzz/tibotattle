@@ -1,91 +1,70 @@
 # User guide
 
 TiboTattle shows how you use the [oh-my-pi](https://github.com/can1357/oh-my-pi)
-(`omp`) coding agent: tokens, cost, speed and subscription allowance. It runs
-on your machine, reads omp's files without changing them, and never uses the
-network. TiboTattle is not affiliated with omp.
+(`omp`) coding agent: tokens, cost, speed and subscription allowance. It is a
+macOS menu-bar app. It runs on your machine, reads omp's files without changing
+them, and never uses the network. TiboTattle is not affiliated with omp.
 
-## Install from source
+## Requirements
 
-You need Node.js 22.13 or newer and omp on the same machine.
+- macOS 13 or newer (Apple silicon or Intel).
+- omp installed and used on the same Mac. TiboTattle only reads its files.
 
-```sh
-git clone https://github.com/aloyzzz/tibotattle.git
-cd tibotattle
-npm start
-```
+## Install
 
-`npm start` indexes your omp sessions, keeps watching for new ones, and prints
-the dashboard address, normally <http://127.0.0.1:8787/>. Press Ctrl+C to stop.
-No `npm install` is needed for the CLI or the dashboard.
+Either:
 
-If omp keeps its data somewhere other than `~/.omp/agent`, TiboTattle follows
-omp's own `PI_CODING_AGENT_DIR` and `PI_CONFIG_DIR` variables (and
-`$XDG_DATA_HOME/omp` on Linux), or you can pass `--agent-dir DIR`.
+- download `TiboTattle-macos.zip` from a run of the repository's **macOS app**
+  GitHub Actions workflow (a CI build output, kept for 14 days; there are no
+  published releases), unzip it and move `TiboTattle.app` to `/Applications`; or
+- build it yourself on a Mac with Xcode 16:
+  `apps/macos/build-app.sh`, which produces `apps/macos/dist/TiboTattle.app`.
 
-### Command line
+### First launch
 
-| Command | What it does |
-|---|---|
-| `node bin/tibotattle.js serve [--port N]` | Index, watch and serve the dashboard (`--port 0` picks a free port) |
-| `node bin/tibotattle.js scan` | Refresh the index once and print counts |
-| `node bin/tibotattle.js report [--period 24h\|7d\|30d\|all] [--json]` | Print totals, providers, models with median decode speed and TTFT, and allowance |
-| `node bin/tibotattle.js doctor [--show-paths]` | Check omp sources, Node.js, SQLite and the index |
-
-Every command accepts `--agent-dir DIR` and `--state-dir DIR`.
-
-### Desktop app
+The app is ad-hoc signed and not notarized, so Gatekeeper blocks the first
+launch. Right-click `TiboTattle.app` and choose **Open**, then confirm. Or clear
+the quarantine flag once:
 
 ```sh
-npm install        # installs Electron, the only dev dependency
-npm run desktop
+xattr -dr com.apple.quarantine /Applications/TiboTattle.app
 ```
 
-The desktop app runs the same monitor and dashboard in one window and adds a
-tray icon. On macOS the tray title shows the lowest remaining allowance, such
-as `7d 63%` (a trailing `?` means the reading is stale); elsewhere it is in the
-tooltip. The tray menu has **Open dashboard**, **Refresh now**, **Start at
-login** (macOS and Windows) and **Quit**. Closing the window on macOS keeps the
-app in the tray. There is no installer and no automatic update.
+TiboTattle has no Dock icon. Look for it in the menu bar.
 
-### Native macOS app
+### Where it looks for omp's data
 
-On macOS 13 or newer you can use the native menu-bar app instead of the CLI or
-Electron. It is one small universal app that uses only frameworks built into
-macOS; it needs no Node.js.
+By default `~/.omp/agent`. If omp keeps its data elsewhere, TiboTattle follows
+omp's own `PI_CODING_AGENT_DIR` and `PI_CONFIG_DIR` variables, but only when
+they are present in the app's environment. An app started from Finder or as a
+login item usually does not see variables exported in your shell profile. No
+other location is searched.
 
-Build it with `apps/macos/build-app.sh` (Xcode 16 or its command-line tools),
-or download `TiboTattle-macos.zip` from a run of the repository's **macOS app**
-CI workflow. Move `TiboTattle.app` to `/Applications`. The app is ad-hoc signed
-and not notarized, so the first launch needs right-click → **Open**, or
-`xattr -dr com.apple.quarantine /Applications/TiboTattle.app`.
+## The menu bar and popover
 
-- The menu bar shows the lowest remaining allowance, such as `62%` (`62%?`
-  when every reading is stale), or only an icon when omp has recorded no
-  allowance.
+- The menu bar shows the lowest remaining allowance among fresh readings, such
+  as `62%` (`62%?` when every reading is stale), or only an icon when omp has
+  recorded no allowance.
 - Click it for allowance meters with reset countdowns and pace, totals for the
   chosen period (requests, tokens, cost with unpriced requests, cache hit
   rate) and the top five models with median decode speed and TTFT. The period
-  choice is remembered.
+  picker (24h, 7d, 30d, All) is remembered.
 - **Open Dashboard** shows the full dashboard in a window. It is served from
   inside the app; no web server or network port is opened. Closing the window
   frees its memory; the app keeps running in the menu bar.
-- **Refresh** re-scans immediately; otherwise the app updates within about a
+- **Refresh** re-scans immediately. Otherwise the app updates within about a
   second of omp writing, and at least every minute.
 - **Start at login** registers the app as a login item (macOS may ask you to
   approve it in System Settings › General › Login Items). **Quit** stops it.
 
-The app uses the same state directory and index as the CLI
-(`~/Library/Application Support/TiboTattle`, or `TIBOTATTLE_STATE_DIR`), and
-follows `PI_CODING_AGENT_DIR` and `PI_CONFIG_DIR` like the CLI when they are
-set in its environment. If the index was written by a newer TiboTattle, the
-app shows `store_newer` and leaves the index unchanged.
+If the index was written by a newer TiboTattle, the popover says so
+(`store_newer`) and the index is left unchanged. Update the app.
 
 ## Dashboard pages
 
 Choose the reporting period (24 h, 7 d, 30 d or all) in the header; the choice
-is remembered in this browser. The page refreshes itself when omp writes new
-data, and **Refresh** forces a re-scan.
+is remembered while the app runs. The page refreshes itself when omp writes new
+data (it falls back to polling), and **Refresh** forces a re-scan.
 
 - **Overview**: totals for the period, cost by provider, the allowance meters
   and the top models by requests.
@@ -135,9 +114,10 @@ percentiles; requests without timing are left out, never counted as zero.
 ### Allowance
 
 Allowance comes from omp's `usage_history` table, which omp fills when it
-checks a subscription provider's usage limits. It therefore appears only for
-subscription providers whose usage omp fetches; API-key usage has no
-allowance. TiboTattle shows the latest reading per account and window; a
+checks a subscription provider's usage limits. It therefore appears only when
+omp records `usage_history` (subscription providers whose usage omp fetches);
+API-key usage has no allowance, and without any snapshot the menu bar shows
+only an icon. TiboTattle shows the latest reading per account and window; a
 reading older than 30 minutes is marked stale.
 
 The pace forecast uses readings since the most recent reset (a drop in used
@@ -150,8 +130,19 @@ reset.
 Accounts are shown as `provider account abc123`, a short local digest; the
 real account identifier is never stored.
 
-## Troubleshooting and privacy
+## Delete your data
 
-Run `node bin/tibotattle.js doctor` first; [SUPPORT.md](../SUPPORT.md) lists
-common causes. [The privacy reference](reference/privacy.md) lists exactly
-what is read and stored and how to delete it.
+1. Turn off **Start at login**, then **Quit** TiboTattle.
+2. Delete `~/Library/Application Support/TiboTattle` (or the directory in
+   `TIBOTATTLE_STATE_DIR` if you set it).
+3. Optionally: `defaults delete io.github.aloyzzz.tibotattle`.
+4. Delete `TiboTattle.app`.
+
+omp's own files are never touched. See
+[the privacy reference](reference/privacy.md) for exactly what is read and
+stored.
+
+## Troubleshooting
+
+[SUPPORT.md](../SUPPORT.md) lists common causes (nothing shown, empty
+allowance, `store_newer`).

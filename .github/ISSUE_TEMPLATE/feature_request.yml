@@ -1,12 +1,12 @@
 name: Feature request
-description: Suggest an improvement to TiboTattle (omp edition).
+description: Suggest an improvement to the TiboTattle macOS app.
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
         TiboTattle is local-only by design: no hosted service, sharing,
-        accounts or network access. Requests that need those are out of scope.
+        accounts or network access, and macOS only. Requests that need those are out of scope.
   - type: textarea
     id: problem
     attributes:

@@ -1,5 +1,4 @@
-// Refresh orchestration and summaries (src/monitor.js plus the query side of
-// src/server.js).
+// Refresh orchestration and summaries (the query side of the in-process API).
 //
 // - refresh() is single-flight: runs execute one at a time on an internal
 //   serial queue, and callers that arrive while a run is in progress share one

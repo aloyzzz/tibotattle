@@ -1,5 +1,5 @@
 // Read-only, incremental import of omp's recorded subscription usage
-// (`usage_history` in agent.db; src/omp/quota-reader.js). Only allowlisted
+// (`usage_history` in agent.db). Only allowlisted
 // columns are selected; email, account_id and every other table are never
 // read. Account keys are digested.
 
