@@ -1,13 +1,14 @@
-node_modules/
-dist/
-out/
-state/
+# Swift build output
+apps/macos/.build/
+apps/macos/dist/
+
+# Local state and raw evidence: never commit
 *.sqlite
 *.sqlite-*
 *.db
 *.db-*
 identity.key
-.DS_Store
 *.log
-apps/macos/.build/
-apps/macos/dist/
+
+# macOS
+.DS_Store

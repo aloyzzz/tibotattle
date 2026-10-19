@@ -19,7 +19,7 @@ DIST="$MACOS_DIR/dist"
 APP="$DIST/TiboTattle.app"
 ZIP="$DIST/TiboTattle-macos.zip"
 PLIST_SRC="$MACOS_DIR/Resources/Info.plist"
-ICON_SRC="$REPO_ROOT/apps/electron/assets/AppIcon.icns"
+ICON_SRC="$MACOS_DIR/Resources/AppIcon.icns"
 WEB_SRC="$REPO_ROOT/apps/web"
 WEB_FILES=(index.html app.js styles.css favicon.svg)
 
@@ -28,11 +28,9 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 1
 fi
 
-# Info.plist version must match package.json.
-PKG_VERSION="$(sed -n 's/^[[:space:]]*"version":[[:space:]]*"\([^"]*\)".*/\1/p' "$REPO_ROOT/package.json" | head -n 1)"
 PLIST_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$PLIST_SRC")"
-if [[ -z "$PKG_VERSION" || "$PKG_VERSION" != "$PLIST_VERSION" ]]; then
-  echo "build-app.sh: Info.plist version ($PLIST_VERSION) does not match package.json ($PKG_VERSION)" >&2
+if [[ -z "$PLIST_VERSION" ]]; then
+  echo "build-app.sh: Info.plist has no CFBundleShortVersionString" >&2
   exit 1
 fi
 

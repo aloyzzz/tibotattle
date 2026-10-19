@@ -22,7 +22,8 @@ let package = Package(
         .testTarget(
             name: "TiboTattleCoreTests",
             dependencies: ["TiboTattleCore"],
-            path: "Tests/TiboTattleCoreTests"
+            path: "Tests/TiboTattleCoreTests",
+            exclude: ["Fixtures"]
         ),
     ]
 )
