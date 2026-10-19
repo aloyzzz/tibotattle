@@ -1,0 +1,60 @@
+{
+  "keyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "cases": [
+    {
+      "domain": "file",
+      "value": "/synthetic/agent/sessions/proj/a.jsonl",
+      "expected": "KCZqmAVy36ixuJ-XHnHirb"
+    },
+    {
+      "domain": "session",
+      "value": "synthetic-session-0001",
+      "expected": "ABdOuEgVENCtm0Hs4N0tYi"
+    },
+    {
+      "domain": "project",
+      "value": "/synthetic/work/project-alpha",
+      "expected": "OAwsX3PX9uknlupnWWIssp"
+    },
+    {
+      "domain": "request",
+      "value": "resp-1\u0000entry-1\u00001767225600000\u0000prov\u0000model-a",
+      "expected": "jPE1z2wV4cEdlBxIRCSSf7"
+    },
+    {
+      "domain": "request",
+      "value": "\u0000entry-2\u00001767225600000.5\u0000prov\u0000model-a",
+      "expected": "QYC1-UeGwaYM9VxiaDRJH3"
+    },
+    {
+      "domain": "snapshot",
+      "value": "1768470000000\u0000prov\u0000acct-synthetic\u0000five_hour",
+      "expected": "k0JIfyAXYzuTxcmgRtsnXP"
+    },
+    {
+      "domain": "account",
+      "value": "prov\u0000acct-synthetic",
+      "expected": "Edx5rOET-9W4rYHoHTOt5Q"
+    },
+    {
+      "domain": "db",
+      "value": "/synthetic/agent/agent.db",
+      "expected": "7QQ68XxqybtyELRgRxCpRj"
+    },
+    {
+      "domain": "file",
+      "value": "",
+      "expected": "TpM3CNApX7bkGDShXSO4y2"
+    },
+    {
+      "domain": "project",
+      "value": "/synthetic/ünïcødé/プロジェクト/🙂",
+      "expected": "Kj4W7q2dcRKJSDaOviPs3P"
+    },
+    {
+      "domain": "session",
+      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "expected": "Ig-qLAOHXIjWoVX4fU09rO"
+    }
+  ]
+}

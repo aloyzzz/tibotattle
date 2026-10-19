@@ -1,0 +1,2881 @@
+{
+  "keyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "context": {
+    "sessionKey": "sessKeySynthetic000001",
+    "projectKey": "projKeySynthetic000001",
+    "agentType": "main"
+  },
+  "cases": [
+    {
+      "name": "header",
+      "entry": {
+        "type": "session",
+        "version": 3,
+        "id": "synthetic-session-0001",
+        "timestamp": "2026-01-01T00:00:00.000Z",
+        "cwd": "/synthetic/work/project-alpha"
+      },
+      "expected": {
+        "kind": "header",
+        "sessionId": "synthetic-session-0001",
+        "cwd": "/synthetic/work/project-alpha"
+      }
+    },
+    {
+      "name": "header without cwd",
+      "entry": {
+        "type": "session",
+        "id": "synthetic-session-0002",
+        "timestamp": "2026-01-01T00:00:00.000Z"
+      },
+      "expected": {
+        "kind": "header",
+        "sessionId": "synthetic-session-0002",
+        "cwd": null
+      }
+    },
+    {
+      "name": "header with numeric cwd",
+      "entry": {
+        "type": "session",
+        "id": "synthetic-session-0003",
+        "cwd": 42
+      },
+      "expected": {
+        "kind": "header",
+        "sessionId": "synthetic-session-0003",
+        "cwd": null
+      }
+    },
+    {
+      "name": "header without id",
+      "entry": {
+        "type": "session",
+        "cwd": "/synthetic"
+      },
+      "expected": null
+    },
+    {
+      "name": "assistant full",
+      "entry": {
+        "type": "message",
+        "id": "entry-a1",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "serviceTier": "priority",
+          "credentialId": 3,
+          "responseId": "resp-synthetic-1",
+          "upstreamProvider": "openrouter"
+        }
+      },
+      "expected": {
+        "requestKey": "eP0gCU50j0otjfJQp_X8-6",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": "openrouter",
+        "serviceTier": "priority",
+        "credentialId": 3,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant fractional timestamp",
+      "entry": {
+        "type": "message",
+        "id": "entry-a2",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225600000.5,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "6rsIJ7ZeciMgQB9zNZm8JI",
+        "ts": 1767225600000.5,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant entry timestamp fallback",
+      "entry": {
+        "type": "message",
+        "id": "entry-a3",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-02T03:04:05.678Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 0,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "OIfTbtaVu1DZx0GH9wB0G5",
+        "ts": 1767323045678,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant entry timestamp offset",
+      "entry": {
+        "type": "message",
+        "id": "entry-a4",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-02T03:04:05+05:30",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": -5,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "sFtRgEer4hKME7S3OtLgs1",
+        "ts": 1767303245000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant entry timestamp no millis",
+      "entry": {
+        "type": "message",
+        "id": "entry-a4b",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-02T03:04:05Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": "x",
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "nPRJHB4mj7NmopE5G-OTSZ",
+        "ts": 1767323045000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant entry timestamp long fraction",
+      "entry": {
+        "type": "message",
+        "id": "entry-a4c",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-02T03:04:05.1234567Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": null,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "XTX06Exe5So_ZA1pidexrf",
+        "ts": 1767323045123,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant entry date only",
+      "entry": {
+        "type": "message",
+        "id": "entry-a4d",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-02",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "-TUwEYBZX7CHeGLEBRnNOv",
+        "ts": 1767312000000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant no timestamp",
+      "entry": {
+        "type": "message",
+        "id": "entry-a5",
+        "parentId": "entry-u1",
+        "timestamp": "not a date",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": null
+    },
+    {
+      "name": "assistant ttft greater than duration",
+      "entry": {
+        "type": "message",
+        "id": "entry-a6",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 100,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "AwTMQRTEJG1O8vRWI0OpJm",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 100,
+        "ttftMs": null
+      }
+    },
+    {
+      "name": "assistant missing timing",
+      "entry": {
+        "type": "message",
+        "id": "entry-a7",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000
+        }
+      },
+      "expected": {
+        "requestKey": "UPeu-QnTahPS-Gq7UanTR1",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": null,
+        "ttftMs": null
+      }
+    },
+    {
+      "name": "assistant invalid timing",
+      "entry": {
+        "type": "message",
+        "id": "entry-a8",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": -1,
+          "ttft": "10"
+        }
+      },
+      "expected": {
+        "requestKey": "KdLXrww-bS4NmzauqojJtB",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": null,
+        "ttftMs": null
+      }
+    },
+    {
+      "name": "assistant fractional timing",
+      "entry": {
+        "type": "message",
+        "id": "entry-a8b",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1234.5,
+          "ttft": 12.25
+        }
+      },
+      "expected": {
+        "requestKey": "yb66UHqPNu24YmfZQSzjIo",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1234.5,
+        "ttftMs": 12.25
+      }
+    },
+    {
+      "name": "assistant rounded tokens",
+      "entry": {
+        "type": "message",
+        "id": "entry-a9",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 10.5,
+            "output": 2.4999,
+            "cacheRead": 0.5,
+            "cacheWrite": 7
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "e8in-YJS4gTr9znhz7_CgH",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 11,
+        "output": 2,
+        "cacheRead": 1,
+        "cacheWrite": 7,
+        "totalTokens": 21,
+        "costUsd": null,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant invalid tokens",
+      "entry": {
+        "type": "message",
+        "id": "entry-a10",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": -1,
+            "output": true,
+            "cacheRead": "5",
+            "totalTokens": -3
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "JUzVBKZAFclaEkhRsL5spP",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": null,
+        "output": null,
+        "cacheRead": null,
+        "cacheWrite": null,
+        "totalTokens": null,
+        "costUsd": null,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant empty usage",
+      "entry": {
+        "type": "message",
+        "id": "entry-a11",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {},
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "e1WIeTUOfUmDgb2Q_uJ8Wh",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": null,
+        "output": null,
+        "cacheRead": null,
+        "cacheWrite": null,
+        "totalTokens": null,
+        "costUsd": null,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant unpriced negative cost",
+      "entry": {
+        "type": "message",
+        "id": "entry-a12",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "total": -0.5
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "EHRPyLKe1YKr-4Jvc6-ETf",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": null,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant cost not object",
+      "entry": {
+        "type": "message",
+        "id": "entry-a13",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": 0.5
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "9h1xFsN-kxuh6X57JUxSb3",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": null,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant cost without total",
+      "entry": {
+        "type": "message",
+        "id": "entry-a14",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.1
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "4zDW1wgOPDmoOSwdm3ojIF",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": null,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant zero cost",
+      "entry": {
+        "type": "message",
+        "id": "entry-a15",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "total": 0
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "wS-pGWIZfBduTxihTUJV8s",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant stop toolUse",
+      "entry": {
+        "type": "message",
+        "id": "entry-a16",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "toolUse",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "NID2YIjK6k4dsf6qrHs_Wg",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "toolUse",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant stop unknown",
+      "entry": {
+        "type": "message",
+        "id": "entry-a17",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "weird",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "9BZy_VKFtz8mia96SG0qkg",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "unrecognized",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant stop numeric",
+      "entry": {
+        "type": "message",
+        "id": "entry-a18",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": 5,
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "cqWIf6tYmvAVMrbCW1Vcg2",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "unrecognized",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant stop missing with error",
+      "entry": {
+        "type": "message",
+        "id": "entry-a19",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "errorMessage": "synthetic failure"
+        }
+      },
+      "expected": {
+        "requestKey": "wCSP-HXXAc_KwWXTzmE3Y5",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "error",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant stop missing",
+      "entry": {
+        "type": "message",
+        "id": "entry-a20",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "90_v5l5yJp_8E5RS_Ekiya",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "aborted",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant stop null with empty error",
+      "entry": {
+        "type": "message",
+        "id": "entry-a21",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": null,
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "errorMessage": ""
+        }
+      },
+      "expected": {
+        "requestKey": "ZsCuc75kS-7-by1k7NJopN",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "aborted",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant vocab unrecognized",
+      "entry": {
+        "type": "message",
+        "id": "entry-a22",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "provider": "prové",
+          "model": "model with ! bang",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "upstreamProvider": 7
+        }
+      },
+      "expected": {
+        "requestKey": "vNrEHiqGbK9VsKtsjhUvoO",
+        "ts": 1767225602000,
+        "provider": "unrecognized",
+        "api": "unrecognized",
+        "model": "unrecognized",
+        "upstreamProvider": "unrecognized",
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant vocab max length",
+      "entry": {
+        "type": "message",
+        "id": "entry-a23",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "p.r:o/v@i+d e-r_1",
+          "model": "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "XZ2-kqO96bL4ppL_XuVSx3",
+        "ts": 1767225602000,
+        "provider": "p.r:o/v@i+d e-r_1",
+        "api": "anthropic-messages",
+        "model": "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant tier variants",
+      "entry": {
+        "type": "message",
+        "id": "entry-a24",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "serviceTier": "Priority",
+          "credentialId": -1
+        }
+      },
+      "expected": {
+        "requestKey": "qaB9pv6fd8463uteT8Fe38",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant tier numeric",
+      "entry": {
+        "type": "message",
+        "id": "entry-a25",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "serviceTier": 1,
+          "credentialId": 2.5
+        }
+      },
+      "expected": {
+        "requestKey": "G6swifgPWbuzX-K9mwpLih",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant credential unsafe",
+      "entry": {
+        "type": "message",
+        "id": "entry-a26",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "serviceTier": "flex",
+          "credentialId": 9007199254740992
+        }
+      },
+      "expected": {
+        "requestKey": "4rPVDKEiqnTNJoXbys2G28",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": "flex",
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant credential boolean",
+      "entry": {
+        "type": "message",
+        "id": "entry-a27",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "serviceTier": "ultrafast",
+          "credentialId": true
+        }
+      },
+      "expected": {
+        "requestKey": "wbEfRPQM748Dlt7CJDTVLB",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": "ultrafast",
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant credential zero",
+      "entry": {
+        "type": "message",
+        "id": "entry-a28",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "serviceTier": "auto",
+          "credentialId": 0
+        }
+      },
+      "expected": {
+        "requestKey": "u3goNJghiFr2_3r9RS0EoI",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": "auto",
+        "credentialId": 0,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant large tokens",
+      "entry": {
+        "type": "message",
+        "id": "entry-a29",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 123456789012,
+            "output": 1,
+            "totalTokens": 123456789013
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "1AvsNjcrf0XCdF8AAmcQJg",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 123456789012,
+        "output": 1,
+        "cacheRead": null,
+        "cacheWrite": null,
+        "totalTokens": 123456789013,
+        "costUsd": null,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant subagent context",
+      "context": {
+        "sessionKey": null,
+        "projectKey": null,
+        "agentType": "subagent"
+      },
+      "entry": {
+        "type": "message",
+        "id": "entry-a30",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "e9_ZmF0flZ4cS1v7_d159X",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "subagent",
+        "purpose": "turn",
+        "sessionKey": null,
+        "projectKey": null,
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant unknown agent type",
+      "context": {
+        "sessionKey": "sessKeySynthetic000002",
+        "projectKey": null,
+        "agentType": "weird"
+      },
+      "entry": {
+        "type": "message",
+        "id": "entry-a31",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": {
+        "requestKey": "elcsENcsQJ9qijRKqSCKAB",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "unrecognized",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000002",
+        "projectKey": null,
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant unicode ids",
+      "entry": {
+        "type": "message",
+        "id": "entry-ü-🙂",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250,
+          "responseId": "resp-あ"
+        }
+      },
+      "expected": {
+        "requestKey": "AXz3Y0FpZlfADkq8gB-3R6",
+        "ts": 1767225602000,
+        "provider": "anthropic",
+        "api": "anthropic-messages",
+        "model": "claude-synthetic-1",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "turn",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 100,
+        "output": 50,
+        "cacheRead": 300,
+        "cacheWrite": 20,
+        "totalTokens": 470,
+        "costUsd": 0.0034,
+        "durationMs": 1500,
+        "ttftMs": 250
+      }
+    },
+    {
+      "name": "assistant missing provider",
+      "entry": {
+        "type": "message",
+        "id": "entry-b1",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": null
+    },
+    {
+      "name": "assistant numeric model",
+      "entry": {
+        "type": "message",
+        "id": "entry-b2",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": 12,
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": null
+    },
+    {
+      "name": "assistant usage array",
+      "entry": {
+        "type": "message",
+        "id": "entry-b3",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": [
+            1,
+            2
+          ],
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": null
+    },
+    {
+      "name": "assistant usage missing",
+      "entry": {
+        "type": "message",
+        "id": "entry-b4",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": null
+    },
+    {
+      "name": "user message",
+      "entry": {
+        "type": "message",
+        "id": "entry-u1",
+        "timestamp": "2026-01-01T00:00:01.000Z",
+        "message": {
+          "role": "user",
+          "content": "synthetic"
+        }
+      },
+      "expected": null
+    },
+    {
+      "name": "message without body",
+      "entry": {
+        "type": "message",
+        "id": "entry-u2",
+        "timestamp": "2026-01-01T00:00:01.000Z"
+      },
+      "expected": null
+    },
+    {
+      "name": "message body array",
+      "entry": {
+        "type": "message",
+        "id": "entry-u3",
+        "message": []
+      },
+      "expected": null
+    },
+    {
+      "name": "empty id",
+      "entry": {
+        "type": "message",
+        "id": "",
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": null
+    },
+    {
+      "name": "numeric id",
+      "entry": {
+        "type": "message",
+        "id": 7,
+        "parentId": "entry-u1",
+        "timestamp": "2026-01-01T00:00:02.000Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "synthetic"
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "anthropic",
+          "model": "claude-synthetic-1",
+          "usage": {
+            "input": 100,
+            "output": 50,
+            "cacheRead": 300,
+            "cacheWrite": 20,
+            "totalTokens": 470,
+            "cost": {
+              "input": 0.001,
+              "output": 0.002,
+              "cacheRead": 0.0003,
+              "cacheWrite": 0.0001,
+              "total": 0.0034
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1767225602000,
+          "duration": 1500,
+          "ttft": 250
+        }
+      },
+      "expected": null
+    },
+    {
+      "name": "unknown type",
+      "entry": {
+        "type": "compaction",
+        "id": "entry-c1",
+        "timestamp": "2026-01-01T00:00:01.000Z"
+      },
+      "expected": null
+    },
+    {
+      "name": "model_usage",
+      "entry": {
+        "type": "model_usage",
+        "id": "entry-mu1",
+        "timestamp": "2026-01-01T00:00:05.000Z",
+        "purpose": "title",
+        "api": "openai-responses",
+        "provider": "openai",
+        "model": "gpt-synthetic-mini",
+        "usage": {
+          "input": 10,
+          "output": 5,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 15
+        },
+        "stopReason": "stop"
+      },
+      "expected": {
+        "requestKey": "YilBEWm48jgA4pfAAJz44P",
+        "ts": 1767225605000,
+        "provider": "openai",
+        "api": "openai-responses",
+        "model": "gpt-synthetic-mini",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "title",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 10,
+        "output": 5,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 15,
+        "costUsd": null,
+        "durationMs": null,
+        "ttftMs": null
+      }
+    },
+    {
+      "name": "model_usage no purpose",
+      "entry": {
+        "type": "model_usage",
+        "id": "entry-mu2",
+        "timestamp": "2026-01-01T00:00:05.000Z",
+        "api": "openai-responses",
+        "provider": "openai",
+        "model": "gpt-synthetic-mini",
+        "usage": {
+          "input": 10,
+          "output": 5,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 15
+        },
+        "stopReason": "stop"
+      },
+      "expected": {
+        "requestKey": "wVqZZUpTnrM_tRkMDMhbic",
+        "ts": 1767225605000,
+        "provider": "openai",
+        "api": "openai-responses",
+        "model": "gpt-synthetic-mini",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "auxiliary",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 10,
+        "output": 5,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 15,
+        "costUsd": null,
+        "durationMs": null,
+        "ttftMs": null
+      }
+    },
+    {
+      "name": "model_usage null purpose",
+      "entry": {
+        "type": "model_usage",
+        "id": "entry-mu3",
+        "timestamp": "2026-01-01T00:00:05.000Z",
+        "purpose": null,
+        "api": "openai-responses",
+        "provider": "openai",
+        "model": "gpt-synthetic-mini",
+        "usage": {
+          "input": 10,
+          "output": 5,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 15
+        },
+        "stopReason": "stop"
+      },
+      "expected": {
+        "requestKey": "qDHxemYywjJqVkpqsFc3CD",
+        "ts": 1767225605000,
+        "provider": "openai",
+        "api": "openai-responses",
+        "model": "gpt-synthetic-mini",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "auxiliary",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 10,
+        "output": 5,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 15,
+        "costUsd": null,
+        "durationMs": null,
+        "ttftMs": null
+      }
+    },
+    {
+      "name": "model_usage bad purpose",
+      "entry": {
+        "type": "model_usage",
+        "id": "entry-mu4",
+        "timestamp": "2026-01-01T00:00:05.000Z",
+        "purpose": "bad purpose!",
+        "api": "openai-responses",
+        "provider": "openai",
+        "model": "gpt-synthetic-mini",
+        "usage": {
+          "input": 10,
+          "output": 5,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 15
+        },
+        "stopReason": "stop"
+      },
+      "expected": {
+        "requestKey": "eTSRxAQMukIsWRgIBr4KPc",
+        "ts": 1767225605000,
+        "provider": "openai",
+        "api": "openai-responses",
+        "model": "gpt-synthetic-mini",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "unrecognized",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 10,
+        "output": 5,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 15,
+        "costUsd": null,
+        "durationMs": null,
+        "ttftMs": null
+      }
+    },
+    {
+      "name": "model_usage numeric timestamp ignored",
+      "entry": {
+        "type": "model_usage",
+        "id": "entry-mu5",
+        "timestamp": 1767225600000,
+        "purpose": "title",
+        "api": "openai-responses",
+        "provider": "openai",
+        "model": "gpt-synthetic-mini",
+        "usage": {
+          "input": 10,
+          "output": 5,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 15
+        },
+        "stopReason": "stop"
+      },
+      "expected": {
+        "requestKey": "zv88fsfKtoG3dkfFyiZtxU",
+        "ts": 1767225600000,
+        "provider": "openai",
+        "api": "openai-responses",
+        "model": "gpt-synthetic-mini",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "title",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 10,
+        "output": 5,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 15,
+        "costUsd": null,
+        "durationMs": null,
+        "ttftMs": null
+      }
+    },
+    {
+      "name": "model_usage with timing",
+      "entry": {
+        "type": "model_usage",
+        "id": "entry-mu6",
+        "timestamp": "2026-01-01T00:00:05.000Z",
+        "purpose": "title",
+        "api": "openai-responses",
+        "provider": "openai",
+        "model": "gpt-synthetic-mini",
+        "usage": {
+          "input": 10,
+          "output": 5,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 15
+        },
+        "stopReason": "stop",
+        "duration": 300,
+        "ttft": 30,
+        "responseId": "resp-mu"
+      },
+      "expected": {
+        "requestKey": "_wsV_0e2OCqFWo7Am-UkGv",
+        "ts": 1767225605000,
+        "provider": "openai",
+        "api": "openai-responses",
+        "model": "gpt-synthetic-mini",
+        "upstreamProvider": null,
+        "serviceTier": null,
+        "credentialId": null,
+        "agentType": "main",
+        "purpose": "title",
+        "sessionKey": "sessKeySynthetic000001",
+        "projectKey": "projKeySynthetic000001",
+        "stopReason": "stop",
+        "input": 10,
+        "output": 5,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 15,
+        "costUsd": null,
+        "durationMs": 300,
+        "ttftMs": 30
+      }
+    },
+    {
+      "name": "array entry",
+      "entry": [
+        1,
+        2,
+        3
+      ],
+      "expected": null
+    },
+    {
+      "name": "null entry",
+      "entry": null,
+      "expected": null
+    },
+    {
+      "name": "string entry",
+      "entry": "synthetic",
+      "expected": null
+    }
+  ],
+  "classify": [
+    {
+      "segments": [
+        "proj",
+        "a.jsonl"
+      ],
+      "expected": "main"
+    },
+    {
+      "segments": [
+        "a.jsonl"
+      ],
+      "expected": "main"
+    },
+    {
+      "segments": [
+        "proj",
+        "sub",
+        "b.jsonl"
+      ],
+      "expected": "subagent"
+    },
+    {
+      "segments": [
+        "proj",
+        "sub",
+        "deeper",
+        "c.jsonl"
+      ],
+      "expected": "subagent"
+    },
+    {
+      "segments": [
+        "proj",
+        "__advisor.jsonl"
+      ],
+      "expected": "advisor"
+    },
+    {
+      "segments": [
+        "proj",
+        "sub",
+        "__advisor.2.jsonl"
+      ],
+      "expected": "advisor"
+    },
+    {
+      "segments": [
+        "proj",
+        "__advisor.json"
+      ],
+      "expected": "main"
+    },
+    {
+      "segments": [],
+      "expected": "main"
+    }
+  ],
+  "vocab": [
+    {
+      "value": "anthropic",
+      "expected": "anthropic"
+    },
+    {
+      "value": "gpt-5.1-codex",
+      "expected": "gpt-5.1-codex"
+    },
+    {
+      "value": "a/b:c@d+e f_g",
+      "expected": "a/b:c@d+e f_g"
+    },
+    {
+      "value": "",
+      "expected": "unrecognized"
+    },
+    {
+      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "expected": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "expected": "unrecognized"
+    },
+    {
+      "value": "tab\tchar",
+      "expected": "unrecognized"
+    },
+    {
+      "value": "new\nline",
+      "expected": "unrecognized"
+    },
+    {
+      "value": "trailing\n",
+      "expected": "unrecognized"
+    },
+    {
+      "value": "é",
+      "expected": "unrecognized"
+    },
+    {
+      "value": null,
+      "expected": null
+    },
+    {
+      "value": 12,
+      "expected": "unrecognized"
+    },
+    {
+      "value": true,
+      "expected": "unrecognized"
+    }
+  ]
+}

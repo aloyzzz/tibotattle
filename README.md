@@ -1,297 +1,109 @@
 # TiboTattle
 
-Local-first monitoring for coding-agent usage. TiboTattle
-processes local Codex usage metadata and provider-reported quota evidence to
-show where your allowance stands, what observed work would have cost at
-standard API prices, and where the available evidence does not support a
-confident answer.
+Local-first usage, cost, allowance and speed monitoring for the
+[oh-my-pi](https://github.com/can1357/oh-my-pi) (`omp`) coding agent, as a
+native macOS menu-bar app.
 
-Personal analysis runs locally and works without an account. Raw source logs do
-not leave your machine, and prompts, responses, file paths, and raw account
-identifiers do not enter TiboTattle's derived artifacts. Electron implements
-[accountless optional sharing](docs/decisions/2026-09-04-accountless-sharing-policy.md):
-fresh installs default on, existing installations without a recorded choice
-receive three notices, and a persistent opt-out is available without sign-in.
-Uploads honor the recorded preference and negotiated hosted capabilities.
-Local analysis remains available independently of hosted service availability.
-Native Mac version 0.1.18 retains its default-off, review-and-send behavior.
+TiboTattle reads omp's own session logs and the subscription-usage snapshots
+omp records, keeps a small content-free index on your Mac, and shows the result
+in a menu-bar popover and a dashboard window. It has no hosted service, no
+sharing, no accounts, no updater, opens no network socket and makes no outbound
+network requests.
 
-
-> **The name:** TiboTattle is named with affection for the Codex community and
-> its patron saint of quota resets. It is not affiliated with or endorsed by
-> OpenAI or Thibault Sottiaux, and we will happily rename it if asked. Your
-> personal analysis stays local, and sharing follows the applicable versioned
-> policy and your saved preference.
+> TiboTattle is an independent project. It is not affiliated with or endorsed
+> by omp, its author Can Bölük, or Mario Zechner's pi, which omp is forked
+> from. The name dates from the retired Codex edition of this project.
 
 ## What it shows
 
-- **Allowance tracks** — observed 7-day (and secondary) quota remaining, with
-  reset times, reconstructed from local observations.
-- **API-price-equivalent usage** — replay-safe totals split into cached input,
-  uncached input, reasoning output, and output text, priced from a pinned
-  public price registry.
-- **Measured versus calculated** — how far observed quota movement diverges
-  from cost-implied movement, with a fitted dollars-per-quota-point rate and an
-  explicit uncertainty band.
-- **Timelines** — hourly/daily/weekly usage against allowance, entirely from
-  local evidence.
-- **Speed-mode pricing** — reports distinguish observed Standard, Fast and
-  Ultrafast usage. Supported API-equivalent prices include GPT-6.1 Sol;
-  unsupported model and speed combinations remain explicitly unpriced. These
-  estimates are not subscription charges or quota formulas. See the
-  [0.1.28 release notes](release-notes/0.1.28.md) for the model and plan changes.
-  Codex records the speed mode only when it is applied or
-  changed, so turns before the first change in a session are attributed to
-  Standard as a visible assumption unless a timestamped configuration reading
-  covers them.
-- **A menu bar item** — where the allowance stands without opening the app,
-  including a Check for Updates entry in builds that ship the updater.
+- **Menu bar**: the lowest remaining allowance, such as `62%` (`62%?` when every
+  reading is stale).
+- **Popover**: allowance meters with reset countdowns and pace, totals for the
+  selected period (24h, 7d, 30d, all), and the top models by median decode
+  speed and time to first token.
+- **Dashboard window**: Overview, Usage & cost, Model performance, Allowance
+  and Projects pages.
 
-## Install (macOS, Apple silicon or Intel)
+Missing evidence stays visible as missing: a request without a recorded cost is
+"unpriced" rather than $0, and a request without timing is left out of speed
+statistics rather than counted as zero.
 
-Requires **macOS 14 or later**, on either Apple silicon or Intel. With
-[Homebrew](https://brew.sh/) installed, one command selects the correct signed,
-notarized app for your Mac:
+## Requirements
 
-```bash
-brew install --cask adamallcock/tap/tibotattle
+- macOS 13 or newer (universal: Apple silicon and Intel).
+- omp installed and used on the same Mac. TiboTattle only reads its files.
+- To build from source: Xcode 16 (Swift 6 toolchain). No packages or other
+  dependencies.
+
+## Build and test
+
+```sh
+cd apps/macos
+swift build
+swift test
 ```
 
-The app includes its runtime. You do **not** need Node.js, pnpm, or Xcode to
-install or use the published app.
-
-Alternatively, choose the **macOS Apple silicon** or **macOS Intel** DMG from
-[tibotattle.com](https://tibotattle.com) or the
-[TiboTattle releases page](https://github.com/adamallcock/tibotattle/releases).
-If you are unsure, **Apple menu → About This Mac** shows either an Apple chip or
-an Intel processor. Open the DMG, drag TiboTattle to Applications, and launch it.
-When both refer to the same published version, those channels point to the same
-architecture-specific Developer ID artifact. In Electron, check for updates in
-Settings → About. Native Mac version 0.1.18 uses its retained Sparkle feed to
-transition to Electron. A missing website slot is not a release claim—use the
-GitHub release page for the exact version and digest. A v1 release manifest may explicitly
-leave SBOM or provenance fields `null`; source-to-binary provenance is claimed
-only when a trusted hosted workflow generated/finalized and cryptographically
-verified the exact final bytes for that specific release. This repository is
-the source of truth for the public app and its releases. See the
-[user guide](docs/user-guide.md#install-and-first-launch) for first launch,
-or the developer section below to build from source.
-See [Verify a TiboTattle release](docs/verify-release.md) to check the downloaded
-bytes, Apple signature and notarization, and any non-null release-specific
-GitHub provenance evidence yourself.
-
-For Windows x64 or Linux x86_64, download the matching signed Windows installer
-or Linux AppImage from the [latest release](https://github.com/adamallcock/tibotattle/releases/latest).
-See [platform qualification](docs/reference/platform-support.md) for the tested
-installation and upgrade paths and their remaining limits.
-
-## Build from source (developers)
-
-These requirements are for development, not installation of the released app.
-Repository tooling requires Node.js ≥ 22.13 and
-[pnpm](https://pnpm.io) 11. macOS Electron packaging also requires the
-supported macOS build host and Xcode command-line tools; the production
-candidate procedure is in the [macOS release runbook](docs/runbooks/macos-stable-release-runbook.md).
-
-The root workspace uses pnpm; the Worker keeps its own npm lockfile, which is
-needed only for hosted-service checks and the full gates:
-
-```bash
-pnpm install
-npm --prefix apps/worker ci
+```sh
+apps/macos/build-app.sh   # -> apps/macos/dist/TiboTattle.app and TiboTattle-macos.zip
 ```
 
-Build and open the self-contained desktop app:
+Every run of the [macOS app workflow](.github/workflows/macos-app.yml) also
+attaches `TiboTattle-macos.zip` as a build artifact (kept 14 days). It is a CI
+build output, not a release.
 
-```bash
-npm run package:electron:development
+The app is ad-hoc signed and not notarized, so Gatekeeper blocks the first
+launch. Right-click the app and choose **Open**, or clear the quarantine flag:
+
+```sh
+xattr -dr com.apple.quarantine /path/to/TiboTattle.app
 ```
 
-For development only, run the local dashboard in an external browser without
-building the app:
+See [the user guide](docs/user-guide.md) for the pages, how speed is measured
+and where allowance data comes from.
 
-```bash
-npm run product:local
-```
+## Privacy
 
-then open <http://localhost:8787>. Electron is the main app and uses this same
-dashboard for local collection, Settings and accountless community sharing. A
-useful headline usually appears within seconds; the first deep pass over a
-large history is bounded, cancellable, and resumable.
+- Reads omp's session logs and the `usage_history` table of `agent.db`,
+  read-only. Prompts, responses, tool calls, file paths, emails and credentials
+  are never read into the index.
+- The index holds token counts, costs, timings, sanitized model and provider
+  names and keyed digests, in `~/Library/Application Support/TiboTattle`.
+- No telemetry, no update checks, no remote assets. The dashboard is served
+  inside the app on `tibotattle://app/`; there is no listening socket.
 
-## Uninstall
+Deleting the state directory removes everything TiboTattle has stored. The
+[privacy reference](docs/reference/privacy.md) lists exactly what is read and
+stored.
 
-The ordinary Homebrew uninstall removes the app and preserves local state:
+## Where data comes from
 
-```bash
-brew uninstall --cask tibotattle
-```
+| Source | Default location | Used for |
+|---|---|---|
+| omp session logs | `~/.omp/agent/sessions/**/*.jsonl` | tokens, cost, timing, model, provider |
+| omp `usage_history` | `~/.omp/agent/agent.db` (read-only) | subscription allowance snapshots |
 
-To also remove TiboTattle's Application Support data, caches, WebKit storage,
-and preferences, use `brew uninstall --cask --zap tibotattle`. The zap is
-deliberately narrow: it never touches `~/.codex` and preserves TiboTattle's
-Keychain identities and device credentials. Those credentials can be reset
-only from the app's two-confirmation **Identity & Device Reset…** flow.
+`PI_CODING_AGENT_DIR` and `PI_CONFIG_DIR` (when set in the app's environment)
+change the location. Allowance appears only when omp records `usage_history`,
+which it does for subscription providers whose usage it fetches.
 
-## Languages
-
-TiboTattle ships English, Simplified Chinese, and Spanish for its native shell,
-local dashboard, and public community/install surface. New users follow a safe
-system-language match with English fallback; General settings and the web
-header both provide a persisted override. Language choice does not change
-regional number/date formatting, event times, or quota/pricing semantics. See
-[the localization decision record](docs/decisions/2026-08-03-localization-system.md)
-for the provenance and future-locale policy.
-
-## Privacy model
-
-- Local analysis works fully offline. On a new macOS install, the first-run
-  disclosure visibly preselects **Start TiboTattle at login**, but TiboTattle
-  registers the native Login Item only after the person confirms **Get
-  Started**. Settings re-reads the real macOS state after a request or return
-  from System Settings, and can remove an approval-pending request as well as
-  an enabled item. This starts the normal app at login; it does not install a
-  daemon, LaunchAgent, privileged helper, or separate background worker.
-- Optional macOS allowance notifications are **off by default** and local-only.
-  If enabled in **Settings → Notifications**, they are evaluated only after the
-  existing foreground refresh receives fresh direct provider quota evidence.
-  Stale, inferred, mixed-source, unknown, unobserved, forecast, and
-  log-derived state never notifies; turning the same switch off immediately
-  stops future alerts and clears only their local pending/dedupe state.
-  The current provider receipt supplies a reset schedule but no reset identity,
-  so reset alerts are visibly unavailable rather than inferred from time or a
-  percentage change.
-- The dashboard binds to loopback only. The packaged app's network behavior is
-  audited at build time (zero JavaScript and zero native network attempts in
-  offline mode).
-- Manual Refresh updates quota and detailed accounting together, reusing a
-  valid generation-bound cache. Startup and frequent automatic quota checks
-  stay lightweight; automatic detailed attempts are limited to once per hour.
-  Detailed refresh reads more than the selected session folders. It processes
-  metadata from the selected Codex `sessions` and `archived_sessions` folders;
-  reads `state_5.sqlite` for rollout lineage and `config.toml` for service-tier
-  settings; invokes the installed Codex binary's local `app-server` methods
-  `account/read`, `account/rateLimits/read`, and `account/usage/read`. Source
-  records are processed locally; prompt and response text is not retained in
-  derived state.
-- Electron's optional community sharing is accountless, pseudonymous and
-  content-free. The [accepted sharing policy](docs/decisions/2026-09-04-accountless-sharing-policy.md)
-  enables it for identified fresh installations and preserves saved opt-outs.
-  Existing installations without a choice receive the policy's visible notices
-  before activation. Community and Settings expose the same saved choice.
-- The shared dashboard contains no Google/Apple sign-in or legacy social
-  controls. Legacy enrollment and **Disconnect this Mac** backend contracts
-  remain compatible with their existing consumers. Hosted erasure is a separate
-  private owner operation, not an app control; local-only use needs no account.
-- Derived artifacts (reports, exports, telemetry) are schema-validated to
-  exclude prompts, responses, commands, paths, URLs, and raw identifiers.
-
-The [2026-08-30 deletion-retirement decision](docs/decisions/2026-08-30-self-service-deletion-retirement.md)
-is a source contract, not a deployed-service or installed-release claim. It
-does not change retention or settle privacy-request obligations; see the
-[privacy inventory](docs/reference/local-data-and-privacy.md).
-
-### Private local report artifacts
-
-Historical technical-report artifacts are kept only in
-`.usage-monitor/legacy-reports/`, which is ignored by Git and never used as a
-public web asset. `npm run migrate:legacy-reports` previews a one-time,
-no-overwrite move from the former repository-root layout; add `-- --apply` only
-after reviewing its SHA-256 manifest. Existing root files remain a read-only
-compatibility fallback until they are explicitly migrated.
-
-## Repository layout
+## Layout
 
 | Path | Contents |
-| --- | --- |
-| `apps/electron`, `apps/local`, `apps/web` | Desktop app shell, loopback companion server, and browser dashboard |
-| `apps/worker` | Optional hosted contribution service (off by default) |
-| `packages/` | Workspace packages: accounting, quota analysis, telemetry contract, identity core, and i18n |
-| `src/` | Product source: `application/`, `platform/`, `export/`, `contribution/`, `reporting/`, `providers/` owners plus compatibility roots |
-| `docs/` | Maintained references and runbooks plus retained dated decisions and evidence |
-| `local-review/` | Reproducible standalone review artifact tooling |
+|---|---|
+| `apps/macos/` | the app: `Sources/TiboTattleCore` (engine), `Sources/TiboTattle` (UI), `Tests`, `Resources`, `build-app.sh` |
+| `apps/web/` | the dashboard (plain HTML, CSS and JS), bundled into the app |
+| `docs/` | user guide, architecture and privacy references, decision records |
 
-Despite the name, `local-review/` is committed developer tooling that builds a
-reproducible standalone review artifact — no local user data is tracked there.
-
-The hosted community-aggregate service at
-[tibotattle.com](https://tibotattle.com) is operated by the maintainer. See the
-[current status](docs/current-status.md) and
-[production operations](docs/runbooks/production-operations.md) for the observed
-deployment and its operating boundaries. Forks must provision their own hosted
-resources; the local app never requires the hosted service.
-
-For the complete engineering map of loopback and hosted HTTP routes, native
-bridges, child-process protocols, Cloudflare bindings, workspace package APIs,
-schemas, and third-party services, see the maintained
-[TiboTattle API surface reference](docs/reference/api-surface.md).
-Its source-parity check is `npm run docs:api:check`.
+The earlier Node.js implementation, command-line tool and Electron shell were
+removed; they remain in git history at commit `f140a49`.
 
 ## Development
 
-```bash
-npm test
-```
-
-The selected cross-platform core has an explicit portability lane and a pinned,
-network-isolated Linux container:
-
-```bash
-pnpm test:portable
-pnpm container:portable:build
-pnpm container:portable:test
-```
-
-These commands are preparation evidence only. The released desktop app has
-macOS Apple silicon, macOS Intel, Windows x64 and Linux x64 installers. See the
-[current status matrix](docs/current-status.md) for the separate source, native,
-installed, release, updater and platform qualification.
-
-```bash
-npm run product:check
-```
-
-For iteration, run the preflight and the retained native-upgrade transition
-contract gate:
-
-```bash
-npm run test:preflight
-npm run product:macos:transition:test
-```
-
-The transition gate prepares the pinned Sparkle tools and tests historical
-signed-artifact validation, both incoming appcast paths, and Electron handover
-contracts. It does not build the retired native app or qualify an installed
-upgrade. Use `npm run test:changed -- --base <revision>` to select known changed
-paths; unfamiliar or shared changes run the complete `npm run check` gate.
-Both-architecture installed upgrade qualification remains a separate release
-gate in the [macOS release runbook](docs/runbooks/macos-stable-release-runbook.md).
-
-`npm run architecture:check` enforces ownership boundaries. Maintained current
-references are deliberately split by authority:
-
-- [system architecture](docs/reference/system-architecture.md);
-- [local data and privacy](docs/reference/local-data-and-privacy.md);
-- [API surface](docs/reference/api-surface.md);
-- [CLI commands](docs/reference/cli-reference.md); and
-- [production operations](docs/runbooks/production-operations.md).
-
-Contributions are welcome—see [CONTRIBUTING.md](CONTRIBUTING.md) for the
-workflow and gates. For help, start with [SUPPORT.md](SUPPORT.md); report
-vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
-
-## Status
-
-TiboTattle publishes desktop installers for macOS, Windows x64 and Linux x64,
-with an operational optional hosted service. The current published version and
-user-facing history are listed in the [changelog](CHANGELOG.md) and on the
-[GitHub Releases page](https://github.com/adamallcock/tibotattle/releases).
-TiboTattle is not a provider-authoritative billing dashboard: quota estimates
-carry explicit uncertainty, and unknown models or tiers remain explicit rather
-than silently defaulted. The maintained [current status matrix](docs/current-status.md)
-records source, live-service, installed-artifact, public-release, updater, and
-platform qualification separately.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) before
+changing code, and [the architecture reference](docs/reference/architecture.md)
+for module contracts. Security reports go through
+[SECURITY.md](SECURITY.md).
 
 ## License
 
-[MIT](LICENSE)
+MIT. See [LICENSE](LICENSE).

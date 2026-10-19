@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>TiboTattle</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" id="skip-link">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <img class="brand-mark" src="favicon.svg" alt="" width="28" height="28">
+        <div class="brand-text">
+          <span class="brand-name">TiboTattle</span>
+          <span class="brand-sub">for oh-my-pi</span>
+        </div>
+      </div>
+      <div class="header-controls">
+        <div class="segmented" role="group" aria-label="Reporting period" id="period-control">
+          <button type="button" data-period="24h" aria-pressed="false">24h</button>
+          <button type="button" data-period="7d" aria-pressed="true">7d</button>
+          <button type="button" data-period="30d" aria-pressed="false">30d</button>
+          <button type="button" data-period="all" aria-pressed="false">All</button>
+        </div>
+        <button type="button" class="button" id="refresh-button">Refresh</button>
+        <span class="live" id="live-status" data-state="connecting" role="status">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="live-label">Connecting</span>
+        </span>
+      </div>
+    </div>
+    <nav class="site-nav" aria-label="Dashboard pages">
+      <ul>
+        <li><a href="#/overview" data-route="overview">Overview</a></li>
+        <li><a href="#/usage" data-route="usage">Usage &amp; cost</a></li>
+        <li><a href="#/performance" data-route="performance">Model performance</a></li>
+        <li><a href="#/allowance" data-route="allowance">Allowance</a></li>
+        <li><a href="#/projects" data-route="projects">Projects</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main" class="main" tabindex="-1">
+    <section class="page">
+      <p class="state state-loading">Loading…</p>
+    </section>
+    <noscript><p class="state">TiboTattle needs JavaScript to show the dashboard.</p></noscript>
+  </main>
+  <footer class="site-footer">
+    <p id="status-line" class="status-line" aria-live="polite"></p>
+    <p class="footer-note">Local only. Data comes from omp's session logs and usage records on this machine.</p>
+  </footer>
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+  <div id="sr-live" class="visually-hidden" aria-live="polite"></div>
+</body>
+</html>

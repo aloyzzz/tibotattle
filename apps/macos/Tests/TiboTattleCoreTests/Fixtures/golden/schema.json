@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "tables": {
+    "files": [
+      {
+        "name": "file_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 1
+      },
+      {
+        "name": "dev",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "ino",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "size",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "mtime_ms",
+        "type": "REAL",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "offset",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "session_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "project_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "agent_type",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "updated_at",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      }
+    ],
+    "meta": [
+      {
+        "name": "key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 1
+      },
+      {
+        "name": "value",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      }
+    ],
+    "requests": [
+      {
+        "name": "request_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 1
+      },
+      {
+        "name": "ts",
+        "type": "INTEGER",
+        "notnull": 1,
+        "pk": 0
+      },
+      {
+        "name": "provider",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "api",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "model",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "upstream_provider",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "service_tier",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "credential_id",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "agent_type",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "purpose",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "session_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "project_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "stop_reason",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "input",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "output",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "cache_read",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "cache_write",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "total_tokens",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "cost_usd",
+        "type": "REAL",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "duration_ms",
+        "type": "REAL",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "ttft_ms",
+        "type": "REAL",
+        "notnull": 0,
+        "pk": 0
+      }
+    ],
+    "snapshots": [
+      {
+        "name": "snapshot_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 1
+      },
+      {
+        "name": "recorded_at",
+        "type": "INTEGER",
+        "notnull": 1,
+        "pk": 0
+      },
+      {
+        "name": "provider",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "account_key",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "limit_id",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "label",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "window_label",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "used_fraction",
+        "type": "REAL",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "status",
+        "type": "TEXT",
+        "notnull": 0,
+        "pk": 0
+      },
+      {
+        "name": "resets_at",
+        "type": "INTEGER",
+        "notnull": 0,
+        "pk": 0
+      }
+    ]
+  },
+  "indexes": {
+    "requests_ts": {
+      "table": "requests",
+      "columns": [
+        "ts"
+      ]
+    },
+    "snapshots_series": {
+      "table": "snapshots",
+      "columns": [
+        "provider",
+        "account_key",
+        "limit_id",
+        "recorded_at"
+      ]
+    }
+  },
+  "meta": [
+    {
+      "key": "schema_version",
+      "value": "1"
+    }
+  ]
+}

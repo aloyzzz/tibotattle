@@ -1,26 +1,30 @@
 name: Feature request
-description: Suggest an improvement to TiboTattle.
+description: Suggest an improvement to the TiboTattle macOS app.
 labels: ["enhancement"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        TiboTattle is local-only by design: no hosted service, sharing,
+        accounts or network access, and macOS only. Requests that need those are out of scope.
   - type: textarea
     id: problem
     attributes:
       label: Problem
-      description: What are you trying to do that TiboTattle does not support today?
+      description: What are you trying to see or do that TiboTattle does not support today?
     validations:
       required: true
   - type: textarea
     id: proposal
     attributes:
       label: Proposed solution
-      description: What you would like to happen. Sketches and examples welcome.
+      description: What you would like to happen. If it depends on data omp records, say which field.
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
       label: Alternatives considered
-      description: Workarounds you tried, or other approaches that could solve the same problem.
     validations:
       required: false
   - type: checkboxes
@@ -28,5 +32,5 @@ body:
     attributes:
       label: Content check
       options:
-        - label: This request contains no prompts, model responses, or real file paths from coding-agent sessions.
+        - label: This request contains no prompts, model responses, real file paths or account details from coding-agent sessions.
           required: true

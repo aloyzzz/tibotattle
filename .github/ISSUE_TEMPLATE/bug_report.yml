@@ -1,75 +1,60 @@
 name: Bug report
-description: Report a problem with the local TiboTattle app or dashboard.
+description: Report a problem with the TiboTattle macOS app.
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for the report. For problems with the hosted service at
-        tibotattle.com, use the "Hosted service issue" template instead.
-        For security problems, use a private GitHub Security Advisory,
-        not a public issue (see SECURITY.md).
+        Thanks for the report. For security problems, use a private GitHub
+        Security Advisory, not a public issue (see SECURITY.md). Problems with
+        omp itself belong in omp's repository; TiboTattle is not affiliated with omp.
   - type: input
-    id: app-version
+    id: version
     attributes:
-      label: App version
-      description: From Settings → About or the menu bar item (for example, vX.Y.Z).
-      placeholder: vX.Y.Z
+      label: TiboTattle app version or commit (Finder › Get Info shows the version)
+      placeholder: 0.3.0 or a commit hash
     validations:
       required: true
   - type: dropdown
-    id: install-channel
+    id: surface
     attributes:
-      label: Install channel
+      label: Where does it happen?
       options:
-        - Release download (tibotattle.com / TiboTattle GitHub releases)
-        - Built from source
-        - Preview / development build
+        - Menu bar item
+        - Popover
+        - Dashboard window
+        - Start at login
+        - Launching or installing the app
     validations:
       required: true
   - type: input
-    id: operating-system
+    id: macos
     attributes:
-      label: Operating system and exact build
-      description: On macOS, include both ProductVersion and BuildVersion from `sw_vers`.
-      placeholder: macOS 26.4 (BuildVersion 25E...)
+      label: macOS version
+      placeholder: macOS 15.0
     validations:
       required: true
   - type: dropdown
-    id: architecture
+    id: arch
     attributes:
-      label: Architecture
+      label: Mac architecture
       options:
         - Apple silicon (arm64)
-        - Intel Mac (x64)
-        - Windows (x64)
-        - Linux (x64)
-        - Linux (arm64)
-        - Other / not sure
-    validations:
-      required: true
-  - type: dropdown
-    id: installation-history
-    attributes:
-      label: Installation history
-      options:
-        - Updated over an older TiboTattle version
-        - Fresh install with no previous TiboTattle version
-        - Reinstalled the same version
-        - Not sure
+        - Intel (x86_64)
     validations:
       required: true
   - type: input
-    id: previous-version
+    id: omp
     attributes:
-      label: Previous app version
-      description: If this was an update, give the last TiboTattle version that opened successfully.
-      placeholder: vX.Y.Z or not applicable
+      label: omp version
+      placeholder: omp x.y.z
+    validations:
+      required: true
   - type: textarea
     id: repro
     attributes:
       label: Steps to reproduce
-      description: Numbered steps. Use redacted or synthetic examples only.
+      description: Numbered steps. Use synthetic examples only.
       placeholder: |
         1. ...
         2. ...
@@ -85,11 +70,7 @@ body:
     id: actual
     attributes:
       label: Actual behavior
-      description: |
-        What happened instead. If relevant, include output from the built-in
-        diagnostics: `npm run diagnose:dashboard` from a source checkout.
-        If startup shows a fixed support code, include that code. Review all
-        diagnostics and screenshots for private data before sharing.
+      description: Include any fixed error code the popover shows (for example `store_newer`). Check screenshots for private data before sharing. Never paste session content.
     validations:
       required: true
   - type: checkboxes
@@ -97,5 +78,5 @@ body:
     attributes:
       label: Content check
       options:
-        - label: This report contains no prompts, model responses, or real file paths from coding-agent sessions.
+        - label: This report contains no prompts, model responses, real file paths or account details from coding-agent sessions.
           required: true

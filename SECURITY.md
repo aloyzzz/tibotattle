@@ -1,124 +1,62 @@
-# Security Policy
+# Security policy
 
 ## Reporting a vulnerability
 
-Please report vulnerabilities privately through
-[GitHub Security Advisories on this repository](https://github.com/adamallcock/tibotattle/security/advisories/new).
+Report vulnerabilities privately through
+[GitHub Security Advisories](https://github.com/aloyzzz/tibotattle/security/advisories/new).
 Do not open a public issue for a security problem.
 
-You should receive an acknowledgement within a few days. There is **no bounty
-program**; reports are handled on a best-effort basis by the maintainer.
+Include the TiboTattle version or commit, your macOS version and Mac
+architecture, and steps to reproduce. Use synthetic data only: never attach
+real omp session files, `agent.db`, prompts, responses, paths or account
+details.
+
+Reports are handled on a best-effort basis by the maintainer. There is no paid
+bug bounty.
 
 ## Supported versions
 
-Security fixes target the latest published stable release and current source.
-Older releases may be investigated, but users should expect to upgrade to the
-latest stable build for a fix. Development and preview builds are test
-artifacts, not supported distribution channels. The current release and
-platform availability are recorded on the
-[GitHub Releases page](https://github.com/adamallcock/tibotattle/releases) and
-in the [current status matrix](docs/current-status.md).
+Only the latest commit on the default branch (the native macOS app, 0.3.x)
+receives fixes. The Node.js implementation, command-line tool and Electron
+desktop shell were removed and remain only in git history (commit `f140a49`);
+they are not maintained. The retired Codex edition (0.1.x) and its hosted
+service, community sharing and installers are not maintained either.
 
-## Scope
+## Security model
 
-Two distinct surfaces share this repository:
+TiboTattle is a macOS app that runs entirely on your machine.
 
-- **Local macOS app** (`apps/electron`, `apps/local`, `apps/web`, `src/`,
-  `packages/`): runs entirely on your machine, binds to loopback only, and
-  works fully offline. Issues that break the privacy model — uploads that
-  bypass the applicable sharing policy, prompts/responses/paths entering derived
-  artifacts, loopback exposure — are in scope and treated as high priority.
-- **Hosted contribution service** (`apps/worker`, served at
-  [tibotattle.com](https://tibotattle.com)): operated by the maintainer.
-  Issues affecting the hosted aggregates, contributor pseudonymity, or the
-  upload, disconnect, private owner-erasure, or deletion-safe restore boundaries
-  are in scope. Please do not run disruptive
-  testing (load, enumeration, or exhaustion) against the live service.
+- **No network.** It makes no outbound requests and opens no listening socket
+  or HTTP server. The dashboard is a web view on the custom scheme
+  `tibotattle://app/`; its pages and `/api/*` data are produced inside the app
+  process. The web view cancels every navigation outside `tibotattle://app/`,
+  refuses new windows, has no script message handlers, and uses a
+  non-persistent data store. Responses on the scheme carry a same-origin-only
+  Content-Security-Policy (`default-src 'self'`, no framing, no form posts),
+  and `POST /api/refresh` requires the header `X-TiboTattle: 1`.
+- **Read-only access to omp.** Session logs are read; `agent.db` is opened
+  read-only and only the `usage_history` columns listed in
+  [the architecture reference](docs/reference/architecture.md) are selected.
+  Credentials stored by omp (`auth_credentials`) are never read.
+- **Content-free index.** The index holds token counts, costs, timings,
+  sanitized vocabulary and keyed digests. See
+  [the privacy reference](docs/reference/privacy.md).
+- **Local key.** A random 32-byte key in `identity.key` (mode `0600`) keys the
+  digests. The state directory is created with mode `0700` and the index with
+  mode `0600`.
+- **Signing.** Builds are ad-hoc signed with the hardened runtime and are not
+  notarized. CI artifacts are test builds, not releases.
 
-Current source retires self-service `DELETE /api/v1/me`: it must return
-`404 NOT_FOUND` without participant mutation. Private participant erasure is
-confined to the existing Access-owner and CSRF-protected admin maintenance
-boundary. Ordinary maintenance must not start erasure without its explicit
-target and confirmation. A bypass of either boundary, raw identifiers in the
-audit, or resurrection after restore is a security issue. This source contract
-does not establish deployment or a new privacy-request reporting channel.
+## In scope
 
-The local refresh reads selected Codex session folders, local Codex
-configuration and lineage state, the installed Codex app-server account/quota
-methods, and owner-only derived state. Undisclosed source access, retention of
-prompt/response content, unsafe derived artifacts, unintended network
-transmission, or a bypass of contribution authorization or durable opt-out is in scope.
+- Anything that sends data off the machine, or opens a socket.
+- Navigation or requests from the dashboard web view to origins other than
+  `tibotattle://app/`, or script injection into the dashboard.
+- Session content, paths, emails, raw account keys or credentials reaching the
+  index, logs, API responses, errors or the dashboard.
+- Writes to omp's files, or reads of omp tables other than `usage_history`.
 
-The accepted [accountless Electron sharing policy](docs/decisions/2026-09-04-accountless-sharing-policy.md)
-uses automatic sharing for fresh installations and three visible notices before
-transitioning existing installations without a prior choice. Explicit opt-outs
-remain off. It preserves content exclusion, protected credentials and offline
-local analysis; the legacy native review/consent flow remains compatible.
-This source decision is not a claim of deployment or release activation.
+## Out of scope
 
-The interactive local cache-drop tables also resolve explicit display names,
-worker nicknames, and parent links from bounded read-only Codex thread metadata
-and `session_index.jsonl`. This is a separate, same-origin, non-persisted lookup;
-names and raw thread IDs are excluded from accounting caches, reports,
-diagnostics, and contributions. It never uses the prompt-bearing `threads.title`
-as a display-name fallback. A clicked canonical Codex deep link stays a local
-application handoff.
-
-The owner-approved Projects & threads view (2026-09-08) also reads the explicit
-working directory from bounded, retained session metadata, turn-context records
-and applied thread settings. It uses the
-existing discovery and stable-source reader, then local read-only Git resolution.
-The owner also approved bounded Codex `threads.title` fallbacks for this view
-on 2026-09-08 when explicit names are missing. Titles can contain opening-message
-text, so they are read only for displayed rows and their parents, rendered as
-text, and never exported or uploaded. Ancestry-only reads and cache-drop tables
-retain their title-free contract.
-Directory basenames and thread display labels are transient metadata; paths,
-names and project handles are never written into the accounting index, exports,
-diagnostics, contributions or browser storage. Repository grouping describes
-last-observed local workspace mappings, not verified historical ownership.
-On Windows, transient metadata uses the approved native source reader's
-current-owner, single-link and reparse-point checks instead of Unix mode bits.
-Existing SQLite files are held through connection close; metadata never changes
-source permissions or journal mode. Selected rollout-head reads use the same
-boundary and never read titles. On both macOS and Windows, closed databases
-without sidecars use immutable reads with file-state revalidation; live WAL
-reads require existing WAL/SHM files and may update SHM coordination bytes.
-Missing or unsafe native access preserves
-anonymous fallback labels. A saved, unambiguous Codex repository origin may
-supply project grouping when Git is absent from the app's executable search
-path; a current Git rejection is not overridden by that historical observation.
-The new POST query route requires the local header and existing Origin/Host
-checks. Interactive reports are bounded process-local snapshots;
-publication/scope/filter identity and opaque cursors prevent mixing totals across
-reads. A separate owner-only saved snapshot retains usage figures with anonymous,
-snapshot-local aliases. It excludes names, raw thread IDs, source paths and
-original project/worktree/thread join handles. Restored figures are read-only and
-dated until fresh enrichment completes; they never become a name-search index.
-
-## Do not include session content in reports
-
-TiboTattle's whole purpose is keeping coding-agent session content private.
-**Never include prompts, model responses, or real file paths from Codex
-sessions in a security report.** Reproduce with redacted or synthetic data;
-if the issue genuinely requires real session evidence, say so in the private
-advisory and the maintainer will arrange a safe way to verify.
-
-## Verify a release
-
-For a specific published release, its checksum, platform signature, SBOM, and
-any build attestation establish different parts of the distribution chain.
-Follow [Verify a TiboTattle release](docs/verify-release.md) for the exact
-commands and the current macOS, Windows, and Linux availability boundary. The
-GitHub release is canonical for the v1 manifest, any non-null SBOM, and any
-non-null attestation bundles; the website exposes download availability and
-digest. A v1 artifact may explicitly set `sbom`, `sbom.attestation`, or
-`provenance` to `null`, meaning that evidence was not published. A checksum
-confirms exact bytes; it is not, by itself, a safety or source-provenance claim.
-Source-to-binary provenance is claimed only when a trusted hosted workflow
-generated/finalized and cryptographically verified the exact final bytes for
-that release.
-
-For non-security troubleshooting, use [SUPPORT.md](SUPPORT.md). Security
-Advisories are the only private reporting channel documented by this project;
-do not send secrets or private session material through public issues.
+- Attacks that require an already-compromised user account on the same machine.
+- Accuracy of omp's own cost estimates or of provider-reported allowance.
